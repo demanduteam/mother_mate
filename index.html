@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سامانه پژوهشی تجربیات زایمان و مامایی</title>
+    <!-- Tailwind CSS for modern responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Vazirmatn for highly legible Persian typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #fdfaf7; /* Comforting, warm linen color */
+        }
+        /* Custom scrollbar for premium aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #fda4af;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f43f5e;
+        }
+        .bg-gradient-maternal {
+            background: linear-gradient(135deg, #fff1f2 0%, #fff7ed 100%);
+        }
+        .bg-gradient-header {
+            background: linear-gradient(135deg, #f43f5e 0%, #fb7185 100%);
+        }
+    </style>
+</head>
+<body class="bg-gradient-maternal min-h-screen text-slate-800 flex flex-col justify-between">
+
+    <!-- Custom Toast Notification Box -->
+    <div id="toast-container" class="fixed bottom-5 left-5 z-50 flex flex-col gap-2 max-w-sm w-full px-4"></div>
+
+    <!-- Custom Modal/Dialog System (Instead of standard browser alerts) -->
+    <div id="custom-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-rose-100 transform transition-all duration-300 scale-95 opacity-0" id="modal-content">
+            <div class="flex items-center gap-3 text-rose-500 mb-4" id="modal-icon">
+                <i class="fas fa-exclamation-circle text-2xl"></i>
+                <h3 class="text-lg font-bold" id="modal-title">توجه</h3>
+            </div>
+            <p class="text-slate-600 mb-6" id="modal-text">پیام پیش‌فرض سیستم</p>
+            <div class="flex justify-end gap-2" id="modal-buttons">
+                <button onclick="closeModal()" class="px-5 py-2 bg-rose-600 text-white font-medium rounded-xl hover:bg-rose-700 transition">تایید</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header/Navigation Bar -->
+    <header class="bg-white/80 backdrop-blur-md shadow-sm border-b border-rose-100 sticky top-0 z-40 transition-all">
+        <div class="max-w-7xl mx-auto px-4 py-3 sm:px-6 lg:px-8 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-rose-500 rounded-xl flex items-center justify-center text-white shadow-md shadow-rose-200">
+                    <i class="fas fa-baby-carriage text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-lg font-extrabold text-slate-800">مطالعه تاثیر تجارب شنیداری زایمان</h1>
+                    <p class="text-xs text-rose-500 font-medium">پژوهش علمی روانشناسی و مامایی مامان‌ها</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <!-- User Status Header Details -->
+                <div id="header-user-badge" class="hidden sm:flex items-center gap-2 bg-rose-50 px-3 py-1.5 rounded-full border border-rose-100">
+                    <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                    <span id="header-username" class="text-xs font-bold text-slate-700">کاربر مهمان</span>
+                </div>
+                
+                <button id="logout-btn" onclick="handleLogout()" class="hidden bg-rose-50 text-rose-600 hover:bg-rose-100 hover:text-rose-700 p-2 rounded-xl transition duration-200" title="خروج از حساب">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+                
+                <button id="admin-mode-btn" onclick="toggleAdminPanel()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                    <i class="fas fa-user-shield"></i>
+                    <span id="admin-btn-text">پنل مدیریت</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main content area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 sm:px-6 lg:px-8">
+        
+        <!-- ================= LOGIN SCREEN ================= -->
+        <div id="section-login" class="max-w-md mx-auto my-12 bg-white rounded-3xl shadow-xl border border-rose-100/50 p-8 transition-all duration-300">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-rose-50 rounded-full mx-auto flex items-center justify-center text-rose-500 mb-4 border-2 border-rose-100">
+                    <i class="fas fa-heartbeat text-4xl animate-pulse"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800">ورود به سامانه پژوهش زایمان</h2>
+                <p class="text-sm text-slate-500 mt-2 leading-relaxed">مامان باردار گرامی؛ جهت ورود لطفاً شماره همراه و کلمه‌ی عبوری که برای شما تعریف شده است را وارد نمایید.</p>
+            </div>
+
+            <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-2">شماره تلفن همراه</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">
+                            <i class="fas fa-mobile-alt"></i>
+                        </span>
+                        <input type="text" id="login-phone" placeholder="مثال: 09123456789" class="w-full pr-10 pl-3 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-center font-bold tracking-widest text-slate-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white transition" required>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-2">رمز عبور / پین اختصاصی</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                        <input type="password" id="login-password" placeholder="••••" class="w-full pr-10 pl-3 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-center font-bold tracking-widest text-slate-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white transition" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 bg-gradient-header text-white font-extrabold rounded-2xl shadow-lg shadow-rose-200 hover:shadow-xl hover:shadow-rose-300 hover:opacity-95 transition flex items-center justify-center gap-2">
+                    <span>ورود امن به پنل</span>
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+            </form>
+
+            <div class="mt-8 pt-6 border-t border-slate-100 text-center">
+                <span class="text-xs text-slate-400">این مطالعه تحت نظارت کمیته اخلاق در پژوهش‌های بالینی و مامایی انجام می‌شود.</span>
+            </div>
+        </div>
+
+        <!-- ================= USER PORTAL (AUDIO & SURVEY) ================= -->
+        <div id="section-user-portal" class="hidden space-y-8 transition-all">
+            <!-- Warm Welcome Banner -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-md border border-rose-100/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div class="space-y-2">
+                    <h2 class="text-xl sm:text-2xl font-black text-slate-800">
+                        سلام <span id="portal-user-name" class="text-rose-600">...</span> عزیز، خوش آمدید 🌺
+                    </h2>
+                    <p class="text-sm text-slate-500 leading-relaxed max-w-2xl">
+                        حضور شما در این پژوهش علمی برای ما بسیار ارزشمند است. لطفاً ابتدا پادکست‌ها و فایل‌های صوتی تجربه‌ زایمان زیر را گوش کنید (تا حد امکان با تمرکز کامل) و سپس در انتهای صفحه، پرسشنامه نظرسنجی را تکمیل کنید.
+                    </p>
+                </div>
+                <div class="flex items-center gap-3 bg-amber-50 border border-amber-200 p-4 rounded-2xl w-full md:w-auto">
+                    <div class="w-10 h-10 bg-amber-500 text-white rounded-full flex items-center justify-center text-lg shadow-sm">
+                        <i class="fas fa-info-circle animate-bounce"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-extrabold text-amber-800">پیشرفت کل پژوهش شما:</div>
+                        <div class="text-xs text-amber-700 mt-1 font-bold" id="user-progress-text">شنیده شده: ۰ فایل از ۵۰ فایل</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Portal Split Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <!-- Right Side: Podcasts/Audio Player (8 Cols) -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="bg-white rounded-3xl shadow-md border border-rose-100/50 p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-podcast text-rose-500 text-xl animate-pulse"></i>
+                                <h3 class="text-lg font-extrabold text-slate-800">آرشیو تجربیات صوتی زایمان</h3>
+                            </div>
+                            <span id="audio-count-badge" class="bg-rose-100 text-rose-700 text-xs px-3 py-1 rounded-full font-bold">۰ پادکست موجود است</span>
+                        </div>
+
+                        <!-- Active Audio Player Card -->
+                        <div id="active-player-card" class="bg-slate-900 text-white rounded-2xl p-6 mb-6 shadow-lg shadow-slate-900/10 hidden">
+                            <div class="flex items-start justify-between gap-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-rose-500/20 text-rose-400 rounded-xl flex items-center justify-center text-xl">
+                                        <i class="fas fa-volume-up animate-pulse"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-slate-400 text-xs font-bold">در حال شنیدن پادکست شماره <span id="active-track-index">1</span>:</div>
+                                        <h4 id="active-track-title" class="text-base font-bold text-white mt-1">تجربه زایمان طبیعی طبیعی</h4>
+                                    </div>
+                                </div>
+                                <span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-1 rounded border border-emerald-500/20 font-bold" id="listening-status">درحال پخش</span>
+                            </div>
+                            
+                            <!-- Native Custom Audio Player -->
+                            <div class="mt-6 space-y-3">
+                                <audio id="main-audio-element" class="w-full" controls preload="metadata"></audio>
+                                <div class="flex flex-col sm:flex-row justify-between items-center gap-2 pt-2 border-t border-white/10">
+                                    <p class="text-xs text-slate-400 text-center sm:text-right">
+                                        ⚠️ اگر پخش‌کننده به درستی کار نمی‌کند، از دکمه زیر جهت شنیدن مستقیم استفاده کنید.
+                                    </p>
+                                    <a id="active-track-external-link" target="_blank" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
+                                        <i class="fas fa-external-link-alt"></i>
+                                        <span>دانلود / شنیدن مستقیم</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Audio Playlists Grid/List -->
+                        <div class="max-h-[600px] overflow-y-auto space-y-3 pr-2" id="audios-list-container">
+                            <!-- Dynamic Content Loaded from Database -->
+                            <div class="text-center py-12 text-slate-400">
+                                <i class="fas fa-spinner fa-spin text-3xl mb-3 text-rose-300"></i>
+                                <p class="text-sm">در حال بارگذاری فایل‌های صوتی پژوهش...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Left Side: Questionnaire (5 Cols) -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="bg-white rounded-3xl shadow-md border border-rose-100/50 p-6 sticky top-24">
+                        <div class="flex items-center gap-2 mb-4">
+                            <i class="fas fa-file-signature text-rose-500 text-xl"></i>
+                            <h3 class="text-lg font-extrabold text-slate-800">پرسشنامه نهایی ارزیابی و تاثیر</h3>
+                        </div>
+                        <p class="text-xs text-slate-500 mb-6 leading-relaxed">
+                            لطفاً پس از اتمام گوش دادن به پادکست‌ها، پرسش‌های زیر را با دقت پاسخ دهید. این پاسخ‌ها کاملاً محرمانه مانده و صرفاً برای تحلیل علمی پژوهش استفاده خواهد شد.
+                        </p>
+
+                        <div id="survey-completion-warning" class="bg-rose-50 border border-rose-200 rounded-2xl p-4 text-rose-700 text-xs font-bold mb-6 flex items-start gap-2.5">
+                            <i class="fas fa-exclamation-triangle mt-0.5 text-sm"></i>
+                            <p class="leading-relaxed">
+                                لطفا ابتدا فایل‌های صوتی را گوش داده و حداقل ۳ فایل را به عنوان «شنیده شده» علامت بزنید تا امکان ارسال فرم پژوهش باز شود.
+                            </p>
+                        </div>
+
+                        <!-- Dynamic Survey Form -->
+                        <form id="pregnancy-survey-form" onsubmit="handleSurveySubmit(event)" class="space-y-6 hidden">
+                            <div id="survey-questions-container" class="space-y-6">
+                                <!-- Loaded dynamically -->
+                            </div>
+
+                            <button type="submit" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold rounded-2xl shadow-lg shadow-emerald-100 transition flex items-center justify-center gap-2">
+                                <i class="fas fa-check-circle"></i>
+                                <span>ارسال نهایی پاسخ‌های پژوهش</span>
+                            </button>
+                        </form>
+                        
+                        <!-- Success State Container -->
+                        <div id="survey-success-state" class="hidden text-center py-8 space-y-4">
+                            <div class="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-500 mx-auto border border-emerald-200">
+                                <i class="fas fa-check-double text-2xl animate-bounce"></i>
+                            </div>
+                            <h4 class="text-lg font-extrabold text-slate-800">با تشکر از مشارکت شما!</h4>
+                            <p class="text-xs text-slate-500 leading-relaxed max-w-sm mx-auto">
+                                پاسخ‌های پرسشنامه شما با موفقیت در بانک اطلاعاتی پژوهش ذخیره شد. از زمان گران‌بهایی که برای پیشرفت علمی این مطالعه گذاشتید صمیمانه سپاسگزاریم.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ================= ADMIN PANEL PANEL ================= -->
+        <div id="section-admin" class="hidden space-y-6 transition-all">
+            
+            <!-- Admin Top Welcome & Stats Cards -->
+            <div class="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-xl">
+                <div>
+                    <h2 class="text-2xl font-black flex items-center gap-2.5">
+                        <i class="fas fa-user-shield text-rose-500"></i>
+                        <span>سامانه مدیریت و پژوهش تجربیات زایمان</span>
+                    </h2>
+                    <p class="text-sm text-slate-400 mt-2">کنترل متغیرها، سوالات، پادکست‌ها، حساب کاربری شنوندگان و استخراج داده‌های پژوهش</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="seedInitialData()" class="bg-rose-600/30 text-rose-300 border border-rose-500/30 hover:bg-rose-600/40 px-3 py-1.5 rounded-lg text-xs font-bold transition">
+                        <i class="fas fa-database mr-1"></i> بازنشانی به داده‌های اولیه پژوهش
+                    </button>
+                    <button onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5">
+                        <i class="fas fa-file-csv"></i> دانلود اکسل نتایج نظرسنجی
+                    </button>
+                </div>
+            </div>
+
+            <!-- Research Analytics Quick Counter -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white rounded-2xl p-5 border border-slate-200/60 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center text-xl"><i class="fas fa-users"></i></div>
+                    <div>
+                        <div class="text-slate-400 text-[10px] font-bold">کل کاربران پژوهش</div>
+                        <div id="stat-users-count" class="text-xl font-black mt-1">۰ نفر</div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-5 border border-slate-200/60 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 bg-pink-50 text-pink-500 rounded-xl flex items-center justify-center text-xl"><i class="fas fa-microphone"></i></div>
+                    <div>
+                        <div class="text-slate-400 text-[10px] font-bold">تعداد کل فایل‌های صوتی</div>
+                        <div id="stat-audios-count" class="text-xl font-black mt-1">۰ عدد</div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-5 border border-slate-200/60 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 bg-purple-50 text-purple-500 rounded-xl flex items-center justify-center text-xl"><i class="fas fa-question-circle"></i></div>
+                    <div>
+                        <div class="text-slate-400 text-[10px] font-bold">سوالات پرسشنامه</div>
+                        <div id="stat-questions-count" class="text-xl font-black mt-1">۰ سوال</div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-5 border border-slate-200/60 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 bg-emerald-50 text-emerald-500 rounded-xl flex items-center justify-center text-xl"><i class="fas fa-clipboard-check"></i></div>
+                    <div>
+                        <div class="text-slate-400 text-[10px] font-bold">پاسخ‌های کامل ثبت‌شده</div>
+                        <div id="stat-responses-count" class="text-xl font-black mt-1">۰ مورد</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Sub-Navigation Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <!-- Admin Tabs Sidebar -->
+                <div class="lg:col-span-3 space-y-2">
+                    <div class="bg-white rounded-2xl p-4 border border-slate-200/60 shadow-sm space-y-1">
+                        <button onclick="switchAdminTab('users')" id="tab-btn-users" class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition text-right bg-rose-50 text-rose-600">
+                            <span class="flex items-center gap-2.5">
+                                <i class="fas fa-user-friends"></i> مدیریت کاربران
+                            </span>
+                            <span class="text-xs bg-rose-200/50 px-2 py-0.5 rounded-full" id="sidebar-users-count">۰</span>
+                        </button>
+                        <button onclick="switchAdminTab('audios')" id="tab-btn-audios" class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition text-right text-slate-600 hover:bg-slate-50">
+                            <span class="flex items-center gap-2.5">
+                                <i class="fas fa-podcast"></i> مدیریت فایل‌های صوتی
+                            </span>
+                            <span class="text-xs bg-slate-200/50 px-2 py-0.5 rounded-full" id="sidebar-audios-count">۰</span>
+                        </button>
+                        <button onclick="switchAdminTab('questions')" id="tab-btn-questions" class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition text-right text-slate-600 hover:bg-slate-50">
+                            <span class="flex items-center gap-2.5">
+                                <i class="fas fa-tasks"></i> مدیریت سوالات پرسشنامه
+                            </span>
+                            <span class="text-xs bg-slate-200/50 px-2 py-0.5 rounded-full" id="sidebar-questions-count">۰</span>
+                        </button>
+                        <button onclick="switchAdminTab('results')" id="tab-btn-results" class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition text-right text-slate-600 hover:bg-slate-50">
+                            <span class="flex items-center gap-2.5">
+                                <i class="fas fa-poll"></i> نتایج و تحلیل پژوهش
+                            </span>
+                            <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-black" id="sidebar-responses-count">۰</span>
+                        </button>
+                        <button onclick="switchAdminTab('supabase')" id="tab-btn-supabase" class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition text-right text-slate-600 hover:bg-slate-50">
+                            <span class="flex items-center gap-2.5">
+                                <i class="fas fa-cloud-upload-alt text-emerald-500"></i> تنظیمات Supabase
+                            </span>
+                            <span class="text-xs bg-emerald-500 text-white px-2 py-0.5 rounded">ویژه</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Admin Main Workspace Container (9 Cols) -->
+                <div class="lg:col-span-9">
+                    
+                    <!-- Tab Content: Users Management -->
+                    <div id="admin-tab-users" class="bg-white rounded-3xl p-6 border border-slate-200/60 shadow-sm space-y-6">
+                        <div class="flex justify-between items-center pb-4 border-b border-slate-100">
+                            <h3 class="text-lg font-black text-slate-800 flex items-center gap-2">
+                                <i class="fas fa-user-plus text-slate-400"></i>
+                                <span>ثبت و ویرایش مادران پژوهش</span>
+                            </h3>
+                        </div>
+
+                        <form id="admin-user-form" onsubmit="saveUser(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-2xl">
+                            <input type="hidden" id="edit-user-id">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1.5">نام و نام خانوادگی شنونده</label>
+                                <input type="text" id="user-input-name" placeholder="مثال: زهرا مرادی" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-rose-500" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1.5">شماره همراه (آیدی ورود)</label>
+                                <input type="text" id="user-input-phone" placeholder="مثال: 09121234567" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm text-center font-bold tracking-wider focus:ring-2 focus:ring-rose-500" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1.5">کلمه عبور / رمز پین</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="user-input-password" placeholder="مثال: 1234" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm text-center font-bold tracking-wider focus:ring-2 focus:ring-rose-500" required>
+                                    <button type="submit" class="bg-rose-600 hover:bg-rose-700 text-white font-bold px-4 rounded-xl text-sm transition shrink-0">ثبت کاربر</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- Users Table List -->
+                        <div class="overflow-x-auto rounded-xl border border-slate-100">
+                            <table class="w-full text-sm text-right text-slate-600">
+                                <thead class="text-xs text-slate-500 bg-slate-50 uppercase font-bold border-b border-slate-100">
+                                    <tr>
+                                        <th class="px-6 py-3.5">نام کاربر پژوهش</th>
+                                        <th class="px-6 py-3.5 text-center">شماره همراه</th>
+                                        <th class="px-6 py-3.5 text-center">رمز عبور / پین</th>
+                                        <th class="px-6 py-3.5 text-center">تعداد فایلهای شنیده‌شده</th>
+                                        <th class="px-6 py-3.5 text-left">عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-users-body" class="divide-y divide-slate-100">
+                                    <!-- Dynamic rows loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content: Audios Management -->
+                    <div id="admin-tab-audios" class="hidden bg-white rounded-3xl p-6 border border-slate-200/60 shadow-sm space-y-6">
+                        <div class="flex justify-between items-center pb-4 border-b border-slate-100">
+                            <h3 class="text-lg font-black text-slate-800 flex items-center gap-2">
+                                <i class="fas fa-headphones-alt text-slate-400"></i>
+                                <span>بانک مدیریت پادکست‌ها و تجربیات زایمان (حداکثر ۵۰+ فایل)</span>
+                            </h3>
+                        </div>
+
+                        <form id="admin-audio-form" onsubmit="saveAudio(event)" class="space-y-4 bg-slate-50 p-4 rounded-2xl">
+                            <input type="hidden" id="edit-audio-id">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1.5">عنوان پادکست / تجربه صوتی</label>
+                                    <input type="text" id="audio-input-title" placeholder="مثال: تجربه زایمان فیزیولوژیک سارا در بیمارستان صارم" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-rose-500" required>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1.5">توضیح کوتاه / نام گوینده</label>
+                                    <input type="text" id="audio-input-desc" placeholder="مثال: ۴۴ دقیقه - آرامش‌بخش و برطرف‌کننده استرس زایمان" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-rose-500" required>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1.5">لینک فایل صوتی (آدرس گوگل داکس، درایو، یا لینک مستقیم صوتی)</label>
+                                <div class="flex gap-2">
+                                    <input type="url" id="audio-input-url" placeholder="مثال: https://docs.google.com/uc?export=download&id=..." class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-left tracking-wider font-mono focus:ring-2 focus:ring-rose-500" required>
+                                    <button type="submit" class="bg-rose-600 hover:bg-rose-700 text-white font-bold px-5 rounded-xl text-sm transition shrink-0">ثبت فایل</button>
+                                </div>
+                                <span class="text-[10px] text-slate-400 mt-1 block">📌 شما می‌توانید لینک صوتی بارگذاری شده در گوگل درایو یا گوگل داکس را در این کادر قرار دهید.</span>
+                            </div>
+                        </form>
+
+                        <!-- Audios Table List -->
+                        <div class="overflow-x-auto rounded-xl border border-slate-100">
+                            <table class="w-full text-sm text-right text-slate-600">
+                                <thead class="text-xs text-slate-500 bg-slate-50 uppercase font-bold border-b border-slate-100">
+                                    <tr>
+                                        <th class="px-6 py-3.5">عنوان پادکست</th>
+                                        <th class="px-6 py-3.5">توضیحات و خلاصه</th>
+                                        <th class="px-6 py-3.5 text-center">لینک دانلود / وب</th>
+                                        <th class="px-6 py-3.5 text-left">عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-audios-body" class="divide-y divide-slate-100">
+                                    <!-- Dynamic rows loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content: Questions Management -->
+                    <div id="admin-tab-questions" class="hidden bg-white rounded-3xl p-6 border border-slate-200/60 shadow-sm space-y-6">
+                        <div class="flex justify-between items-center pb-4 border-b border-slate-100">
+                            <h3 class="text-lg font-black text-slate-800 flex items-center gap-2">
+                                <i class="fas fa-edit text-slate-400"></i>
+                                <span>طراحی و سفارشی‌سازی سوالات پرسشنامه</span>
+                            </h3>
+                        </div>
+
+                        <form id="admin-question-form" onsubmit="saveQuestion(event)" class="space-y-4 bg-slate-50 p-4 rounded-2xl">
+                            <input type="hidden" id="edit-question-id">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1.5">متن دقیق سوال نظرسنجی پژوهشی</label>
+                                    <input type="text" id="question-input-title" placeholder="مثال: شنیدن تجارب چقدر در جلب اطمینان شما موثر بود؟" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-rose-500" required>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1.5">نوع پاسخ سوال</label>
+                                    <select id="question-input-type" onchange="toggleOptionsInput()" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-rose-500" required>
+                                        <option value="rating">طیف پنج امتیازی (خیلی کم تا خیلی زیاد)</option>
+                                        <option value="choice">چند گزینه‌ای سفارشی (تک انتخابی)</option>
+                                        <option value="text">تشریحی و توصیفی (متن آزاد)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div id="question-options-container" class="hidden">
+                                <label class="block text-xs font-bold text-slate-600 mb-1.5">گزینه‌ها (با علامت کاما یا ویرگول از هم جدا کنید)</label>
+                                <input type="text" id="question-input-options" placeholder="مثال: زایمان طبیعی را ترجیح میدهم, سزارین را انتخاب میکنم, هنوز مطمئن نیستم" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-rose-500">
+                            </div>
+
+                            <div class="flex justify-end">
+                                <button type="submit" class="bg-rose-600 hover:bg-rose-700 text-white font-bold px-6 py-2 rounded-xl text-sm transition">ثبت سوال جدید</button>
+                            </div>
+                        </form>
+
+                        <div class="space-y-3" id="questions-list-manager">
+                            <!-- Dynamically loaded list with up/down arrows or deletion buttons -->
+                        </div>
+                    </div>
+
+                    <!-- Tab Content: Results Panel -->
+                    <div id="admin-tab-results" class="hidden bg-white rounded-3xl p-6 border border-slate-200/60 shadow-sm space-y-6">
+                        <div class="flex justify-between items-center pb-4 border-b border-slate-100">
+                            <h3 class="text-lg font-black text-slate-800 flex items-center gap-2">
+                                <i class="fas fa-chart-bar text-rose-500 animate-bounce"></i>
+                                <span>نتایج و ماتریس ثبت‌شده‌ی پرسشنامه‌ها</span>
+                            </h3>
+                        </div>
+
+                        <!-- Statistical charts / Summary block -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-rose-50/40 p-4 rounded-2xl border border-rose-100/50">
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-700 mb-3 flex items-center gap-1.5"><i class="fas fa-clipboard-check text-rose-500"></i> خلاصه تحلیل مشارکت:</h4>
+                                <ul class="space-y-2 text-xs text-slate-600">
+                                    <li class="flex justify-between bg-white p-2.5 rounded-lg border border-slate-100">
+                                        <span>کل کاربران مشارکت‌کننده:</span>
+                                        <span id="results-participated" class="font-extrabold text-slate-800">۰ نفر</span>
+                                    </li>
+                                    <li class="flex justify-between bg-white p-2.5 rounded-lg border border-slate-100">
+                                        <span>کل فایلهای صوتی شنیده‌شده ثبت‌شده:</span>
+                                        <span id="results-listened" class="font-extrabold text-slate-800">۰ فایل</span>
+                                    </li>
+                                    <li class="flex justify-between bg-white p-2.5 rounded-lg border border-slate-100">
+                                        <span>نرخ پاسخ کل به سوالات:</span>
+                                        <span id="results-rate" class="font-extrabold text-emerald-600">۰٪</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-700 mb-3 flex items-center gap-1.5"><i class="fas fa-stethoscope text-rose-500"></i> خروجی متغیرهای پژوهش:</h4>
+                                <p class="text-xs text-slate-500 leading-relaxed">
+                                    داده‌های جمع‌آوری شده در قالب استاندارد برای ورود به نرم‌افزار SPSS یا R و Supabase طراحی شده‌اند. شما می‌توانید جهت محاسبات همبستگی در پایان مطالعه، داده‌ها را مستقیماً از بخش بالای صفحه در قالب فایل Excel خروجی بگیرید.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Submitted Answers List -->
+                        <div class="space-y-4" id="results-records-container">
+                            <!-- Loaded Dynamically -->
+                            <div class="text-center py-12 text-slate-400">
+                                <i class="fas fa-folder-open text-3xl mb-3"></i>
+                                <p class="text-sm">هنوز پاسخی در نظرسنجی ثبت نشده است.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content: Supabase & GitHub Guide -->
+                    <div id="admin-tab-supabase" class="hidden bg-white rounded-3xl p-6 border border-slate-200/60 shadow-sm space-y-6">
+                        <div class="pb-4 border-b border-slate-100">
+                            <h3 class="text-lg font-black text-emerald-600 flex items-center gap-2">
+                                <i class="fas fa-database"></i>
+                                <span>مراحل استقرار در Supabase و وب‌سایت GitHub Pages</span>
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1">با کپی کردن این کدها، وب‌سایت شما به صورت کاملا رایگان آنلاین و متصل به بانک اطلاعاتی دائمی خواهد شد.</p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-700 mb-2 flex items-center gap-1.5"><span class="w-5 h-5 bg-rose-100 text-rose-600 rounded-full text-xs flex items-center justify-center font-bold">۱</span> گام اول: فعال‌سازی Supabase</h4>
+                                <p class="text-xs text-slate-500 leading-relaxed mb-2">
+                                    یک پروژه در <a href="https://supabase.com" target="_blank" class="text-emerald-500 underline">Supabase.com</a> بسازید، سپس به بخش <strong>SQL Editor</strong> بروید، کد زیر را کپی کرده و اجرا (Run) کنید تا کل جدول‌های موردنیاز ایجاد شوند:
+                                </p>
+                                <div class="relative bg-slate-900 rounded-2xl p-4 font-mono text-[10px] sm:text-xs text-left text-teal-400 overflow-x-auto">
+                                    <button onclick="copyToClipboard('supabase-sql-code')" class="absolute top-3 right-3 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-3 py-1.5 rounded-lg text-[10px] font-sans font-bold transition">کپی اسکریپت SQL</button>
+                                    <pre id="supabase-sql-code">
+-- Table 1: Users registered by Admin
+CREATE TABLE public.users (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  name TEXT NOT NULL,
+  phone VARCHAR(20) UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Table 2: Audio files
+CREATE TABLE public.audios (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT,
+  url TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Table 3: Questionnaire Questions
+CREATE TABLE public.questions (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  title TEXT NOT NULL,
+  type VARCHAR(20) NOT NULL, -- 'rating', 'choice', 'text'
+  options TEXT[], -- Array of choices
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Table 4: Survey Responses
+CREATE TABLE public.responses (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_phone VARCHAR(20) NOT NULL,
+  answers JSONB NOT NULL,
+  listened_audios TEXT[],
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);</pre>
+                                </div>
+                            </div>
+
+                            <hr class="border-slate-100">
+
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-700 mb-2 flex items-center gap-1.5"><span class="w-5 h-5 bg-rose-100 text-rose-600 rounded-full text-xs flex items-center justify-center font-bold">۲</span> گام دوم: اتصال GitHub Pages</h4>
+                                <p class="text-xs text-slate-500 leading-relaxed">
+                                    این فایل تک‌صفحه‌ای <code class="bg-slate-100 px-1 py-0.5 rounded text-rose-600 font-mono">index.html</code> را در مخزن گیت‌هاب آپلود نموده و از بخش Settings سربرگ <strong>Pages</strong> را فعال کنید تا وب‌سایت پژوهش برای تمام مادران باردار در دسترس قرار گیرد.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Soft Maternal Footer -->
+    <footer class="bg-white/50 border-t border-rose-100 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p class="text-xs font-bold text-slate-600">
+                © سامانه یکپارچه نظرسنجی و پژوهش روانشناسی زایمان ۱۴۰۵ | طراحی شده جهت تسهیل پژوهش‌های مامایی
+            </p>
+            <p class="text-[10px] text-slate-400">
+                تمام حقوق مادی و معنوی پاسخ‌ها و محتوای صوتی پادکست‌ها متعلق به تیم علمی این پروژه تحقیقاتی می‌باشد.
+            </p>
+        </div>
+    </footer>
+
+    <!-- ================= JAVASCRIPT LOGIC & DATABASE ENGINE ================= -->
+    <script>
+        // LocalStorage keys and fallback simulation engine
+        const STORAGE_KEYS = {
+            USERS: 'maternal_study_users',
+            AUDIOS: 'maternal_study_audios',
+            QUESTIONS: 'maternal_study_questions',
+            RESPONSES: 'maternal_study_responses',
+            CURRENT_USER: 'maternal_study_logged_user',
+            LISTENED_TRACKS: 'maternal_study_listened_tracks_v1'
+        };
+
+        // Standard Scientific Initial Data to populate when database is empty
+        const INITIAL_USERS = [
+            { id: 'u1', name: 'مریم رضایی (نمونه اول بارداری)', phone: '09121111111', password: '1234' },
+            { id: 'u2', name: 'زهرا میرزایی (نمونه دوم بارداری)', phone: '09122222222', password: '1234' },
+            { id: 'u3', name: 'فاطمه السادات احمدی', phone: '09123333333', password: '1234' }
+        ];
+
+        const INITIAL_AUDIOS = [
+            { id: 'a1', title: 'قسمت اول: غلبه بر ترس زایمان و تکنیک‌های ذهنی آرامش', description: 'به گویندگی دکتر سمیرا کریمی (متخصص روانشناسی مامایی) - ۲۲ دقیقه', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+            { id: 'a2', title: 'قسمت دوم: تجربه مامان سارا از زایمان طبیعی فیزیولوژیک بدون مداخله', description: 'پادکست مصاحبه انگیزشی - ۱۵ دقیقه مفید', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
+            { id: 'a3', title: 'قسمت سوم: نقش کلیدی همراه مامان و ورزش‌های تنفسی در اتاق زایمان', description: 'کارگاه صوتی آموزش کنترل دم و بازدم زایمان - ۳۰ دقیقه', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
+            { id: 'a4', title: 'قسمت چهارم: رویارویی با دردهای کاذب و آمادگی کامل برای حضور در بیمارستان', description: 'راهنمای جامع صوتی مناسب برای هفته ۳۵ به بعد - ۱۸ دقیقه', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' },
+            { id: 'a5', title: 'قسمت پنجم: تجربیات زایمان طبیعی پس از سزارین (وی‌بک) چقدر واقعی است؟', description: 'گفتگوی شنیدنی مادران باتجربه - ۲۵ دقیقه', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' }
+        ];
+
+        const INITIAL_QUESTIONS = [
+            { id: 'q1', title: 'شنیدن تجربیات و پادکست‌ها، تا چه حد ترس شما را از زایمان طبیعی کاهش داد؟', type: 'rating' },
+            { id: 'q2', title: 'آیا بعد از شنیدن این قسمت‌ها، نظر شما درمورد نوع زایمان انتخابی‌تان تغییر کرد؟', type: 'choice', options: ['بله، کاملاً نظرم عوض شد و زایمان طبیعی را انتخاب می‌کنم', 'خیر، از ابتدا تصمیمم قاطع بود و پادکست‌ها آن را تقویت کردند', 'تغییری نکرد، همچنان زایمان سزارین را ایمن‌تر میدانم', 'نظری ندارم / همچنان مردد هستم'] },
+            { id: 'q3', title: 'احساس توانمندی و اعتماد‌به‌نفس شما جهت مدیریت درد زایمان پس از آگاهی از این تجارب چقدر است؟', type: 'rating' },
+            { id: 'q4', title: 'به عنوان یک شنونده باردار، کدام پادکست صوتی یا کدام تجربه برایتان الهام‌بخش‌تر و کاربردی‌تر بود؟', type: 'text' },
+            { id: 'q5', title: 'آیا مایل هستید این پادکست‌ها را به دیگر دوستان یا بستگان باردار خود معرفی نمایید؟', type: 'choice', options: ['بله حتماً', 'احتمالاً بله', 'خیر مایل نیستم'] }
+        ];
+
+        const INITIAL_RESPONSES = [];
+
+        // Global State Variables
+        let users = [];
+        let audios = [];
+        let questions = [];
+        let responses = [];
+        let currentUser = null;
+        let listenedTracks = {}; // Format: { userPhone: [audioId1, audioId2] }
+
+        // Bootstrapping function
+        window.onload = function() {
+            initStorage();
+            renderActiveState();
+            setupAudioEventListeners();
+        };
+
+        // Initialize Local DB
+        function initStorage() {
+            if (!localStorage.getItem(STORAGE_KEYS.USERS)) {
+                localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(INITIAL_USERS));
+            }
+            if (!localStorage.getItem(STORAGE_KEYS.AUDIOS)) {
+                localStorage.setItem(STORAGE_KEYS.AUDIOS, JSON.stringify(INITIAL_AUDIOS));
+            }
+            if (!localStorage.getItem(STORAGE_KEYS.QUESTIONS)) {
+                localStorage.setItem(STORAGE_KEYS.QUESTIONS, JSON.stringify(INITIAL_QUESTIONS));
+            }
+            if (!localStorage.getItem(STORAGE_KEYS.RESPONSES)) {
+                localStorage.setItem(STORAGE_KEYS.RESPONSES, JSON.stringify(INITIAL_RESPONSES));
+            }
+            if (!localStorage.getItem(STORAGE_KEYS.LISTENED_TRACKS)) {
+                localStorage.setItem(STORAGE_KEYS.LISTENED_TRACKS, JSON.stringify({}));
+            }
+
+            // Sync from storage to memory
+            users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS));
+            audios = JSON.parse(localStorage.getItem(STORAGE_KEYS.AUDIOS));
+            questions = JSON.parse(localStorage.getItem(STORAGE_KEYS.QUESTIONS));
+            responses = JSON.parse(localStorage.getItem(STORAGE_KEYS.RESPONSES));
+            listenedTracks = JSON.parse(localStorage.getItem(STORAGE_KEYS.LISTENED_TRACKS));
+            
+            const savedUser = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+            }
+        }
+
+        // Reset database handler
+        function seedInitialData() {
+            if(confirm("آیا از بازنشانی بانک اطلاعاتی به حالت پیش‌فرض اولیه مطمئن هستید؟ تمام داده‌های پاسخ‌ها و کاربران جدید حذف خواهند شد.")) {
+                localStorage.clear();
+                initStorage();
+                showToast("اطلاعات پژوهش به داده‌های اولیه بازنشانی شد.", "success");
+                renderActiveState();
+            }
+        }
+
+        // Custom elegant notification helper
+        function showToast(message, type = "success") {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgClass = "bg-white border-rose-500 text-rose-800";
+            let iconClass = "fa-check-circle text-emerald-500";
+            
+            if (type === "error") {
+                bgClass = "bg-white border-red-500 text-red-800";
+                iconClass = "fa-exclamation-triangle text-red-500";
+            } else if (type === "warning") {
+                bgClass = "bg-white border-amber-500 text-amber-800";
+                iconClass = "fa-exclamation-circle text-amber-500";
+            }
+            
+            toast.className = `${bgClass} flex items-center gap-3 p-4 rounded-2xl shadow-xl border-l-4 transition-all duration-300 transform translate-y-2 opacity-0`;
+            toast.innerHTML = `
+                <i class="fas ${iconClass} text-lg"></i>
+                <div class="text-xs font-bold leading-relaxed">${message}</div>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Animation Trigger
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+            
+            // Auto Remove After 4 Seconds
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 4000);
+        }
+
+        // Custom Modal Show Helper
+        function showModal(title, text, type = "info") {
+            const modal = document.getElementById('custom-modal');
+            const content = document.getElementById('modal-content');
+            const mTitle = document.getElementById('modal-title');
+            const mText = document.getElementById('modal-text');
+            const mIcon = document.getElementById('modal-icon');
+            
+            mTitle.innerText = title;
+            mText.innerText = text;
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+            }, 50);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('custom-modal');
+            const content = document.getElementById('modal-content');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Control what views are shown
+        function renderActiveState() {
+            // Update admin toggle button text & style
+            const adminModeBtn = document.getElementById('admin-mode-btn');
+            const adminBtnText = document.getElementById('admin-btn-text');
+            
+            const isShowingAdmin = !document.getElementById('section-admin').classList.contains('hidden');
+            
+            if (isShowingAdmin) {
+                adminBtnText.innerText = "بازگشت به سایت اصلی";
+                adminModeBtn.className = "bg-rose-600 hover:bg-rose-700 text-white px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md shadow-rose-200";
+                
+                document.getElementById('section-login').classList.add('hidden');
+                document.getElementById('section-user-portal').classList.add('hidden');
+                document.getElementById('logout-btn').classList.add('hidden');
+                document.getElementById('header-user-badge').classList.add('hidden');
+                
+                renderAdminData();
+            } else {
+                adminBtnText.innerText = "پنل مدیریت پژوهش";
+                adminModeBtn.className = "bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5";
+                
+                if (currentUser) {
+                    // Show User Portal
+                    document.getElementById('section-login').classList.add('hidden');
+                    document.getElementById('section-user-portal').classList.remove('hidden');
+                    document.getElementById('logout-btn').classList.remove('hidden');
+                    
+                    const badge = document.getElementById('header-user-badge');
+                    badge.classList.remove('hidden');
+                    badge.classList.add('flex');
+                    document.getElementById('header-username').innerText = currentUser.name;
+                    document.getElementById('portal-user-name').innerText = currentUser.name;
+                    
+                    renderUserPortalContent();
+                } else {
+                    // Show Login
+                    document.getElementById('section-login').classList.remove('hidden');
+                    document.getElementById('section-user-portal').classList.add('hidden');
+                    document.getElementById('logout-btn').classList.add('hidden');
+                    document.getElementById('header-user-badge').classList.add('hidden');
+                }
+            }
+        }
+
+        function toggleAdminPanel() {
+            const adminSec = document.getElementById('section-admin');
+            if (adminSec.classList.contains('hidden')) {
+                // Pin Verification for security
+                const pin = prompt("جهت ورود به پنل ادمین رمز عبور را وارد کنید (رمز پیش‌فرض: admin123):");
+                if (pin === "admin123") {
+                    adminSec.classList.remove('hidden');
+                    showToast("ورود موفقیت‌آمیز به پنل مدیریت پژوهش", "success");
+                } else if (pin !== null) {
+                    showToast("کلمه عبور اشتباه است.", "error");
+                    return;
+                } else {
+                    return;
+                }
+            } else {
+                adminSec.classList.add('hidden');
+            }
+            renderActiveState();
+        }
+
+        // Manage logins
+        function handleLogin(event) {
+            event.preventDefault();
+            const phone = document.getElementById('login-phone').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+
+            if (!phone || !password) {
+                showToast("لطفاً تمامی فیلدها را پر کنید.", "warning");
+                return;
+            }
+
+            const matchedUser = users.find(u => u.phone === phone && u.password === password);
+
+            if (matchedUser) {
+                currentUser = matchedUser;
+                localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(currentUser));
+                showToast(`خوش آمدید ${matchedUser.name} عزیز`, "success");
+                renderActiveState();
+            } else {
+                showToast("شماره همراه یا کلمه عبور اشتباه است یا توسط ادمین ثبت نشده است.", "error");
+            }
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+            showToast("از سیستم خارج شدید.", "info");
+            renderActiveState();
+        }
+
+        // Listeners for tracking user behavior
+        function setupAudioEventListeners() {
+            const audio = document.getElementById('main-audio-element');
+            audio.onplay = function() {
+                const activeId = audio.getAttribute('data-active-id');
+                if (activeId && currentUser) {
+                    markTrackAsListened(activeId);
+                }
+            };
+        }
+
+        function markTrackAsListened(audioId) {
+            if (!currentUser) return;
+            
+            const userPhone = currentUser.phone;
+            if (!listenedTracks[userPhone]) {
+                listenedTracks[userPhone] = [];
+            }
+            
+            if (!listenedTracks[userPhone].includes(audioId)) {
+                listenedTracks[userPhone].push(audioId);
+                localStorage.setItem(STORAGE_KEYS.LISTENED_TRACKS, JSON.stringify(listenedTracks));
+                showToast("این پادکست به عنوان شنیده‌شده علامت‌گذاری شد ✔️", "success");
+                renderUserPortalContent(); // Re-render lists & check progress
+            }
+        }
+
+        function selectAudioTrack(audioId) {
+            const audio = audios.find(a => a.id === audioId);
+            if (!audio) return;
+
+            const playerCard = document.getElementById('active-player-card');
+            const audioElement = document.getElementById('main-audio-element');
+            const activeTitle = document.getElementById('active-track-title');
+            const activeIndex = document.getElementById('active-track-index');
+            const activeExtLink = document.getElementById('active-track-external-link');
+
+            playerCard.classList.remove('hidden');
+            activeTitle.innerText = audio.title;
+            activeIndex.innerText = audios.indexOf(audio) + 1;
+            activeExtLink.href = audio.url;
+            
+            audioElement.setAttribute('data-active-id', audio.id);
+            audioElement.src = audio.url;
+            audioElement.play().catch(err => {
+                showToast("پخش خودکار توسط مرورگر متوقف شد. لطفاً دکمه Play یا شنیدن مستقیم را بزنید.", "warning");
+            });
+
+            // Pre-emptively register as clicked/read
+            markTrackAsListened(audio.id);
+            
+            // Scroll smoothly to active player
+            playerCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Load data dynamically inside portal
+        function renderUserPortalContent() {
+            if (!currentUser) return;
+
+            const userPhone = currentUser.phone;
+            const listenedList = listenedTracks[userPhone] || [];
+            
+            // Audio counts and calculations
+            const totalAudios = audios.length;
+            const userListenedCount = listenedList.length;
+            
+            // Update stats badge
+            document.getElementById('audio-count-badge').innerText = `${totalAudios} پادکست موجود است`;
+            document.getElementById('user-progress-text').innerText = `شنیده شده: ${userListenedCount} فایل از کل ${totalAudios} فایل صوتی`;
+
+            // Display podcasts list
+            const container = document.getElementById('audios-list-container');
+            if (totalAudios === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-slate-400 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+                        <i class="fas fa-music text-3xl mb-3"></i>
+                        <p class="text-sm font-bold">هنوز هیچ فایلی بارگذاری نشده است.</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = audios.map((audio, index) => {
+                    const isListened = listenedList.includes(audio.id);
+                    return `
+                        <div class="p-4 rounded-2xl border transition flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 ${isListened ? 'bg-emerald-50/40 border-emerald-100' : 'bg-white border-slate-100 hover:border-rose-100'}">
+                            <div class="flex items-start gap-3">
+                                <button onclick="selectAudioTrack('${audio.id}')" class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${isListened ? 'bg-emerald-500 text-white' : 'bg-rose-100 text-rose-600 hover:bg-rose-200'} transition shadow-sm">
+                                    <i class="fas ${isListened ? 'fa-play' : 'fa-play'} ml-[-1px]"></i>
+                                </button>
+                                <div>
+                                    <h4 class="text-xs sm:text-sm font-extrabold text-slate-800 flex items-center gap-2">
+                                        <span>${index + 1}. ${audio.title}</span>
+                                        ${isListened ? '<span class="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-black">شنیده شده</span>' : ''}
+                                    </h4>
+                                    <p class="text-[11px] text-slate-500 mt-1">${audio.description || 'بدون توضیح کوتاه'}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 w-full sm:w-auto justify-end">
+                                <a href="${audio.url}" target="_blank" onclick="markTrackAsListened('${audio.id}')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-[10px] font-bold transition flex items-center gap-1">
+                                    <i class="fas fa-external-link-alt"></i>
+                                    <span>لینک کمکی</span>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Survey Unlock requirements: at least 1 track (or let's say 2, user asked for "some out of 50+")
+            // We set the threshold to 3 podcasts to ensure research scientific depth
+            const threshold = Math.min(3, totalAudios);
+            const canAnswerSurvey = userListenedCount >= threshold;
+
+            const warningBox = document.getElementById('survey-completion-warning');
+            const surveyForm = document.getElementById('pregnancy-survey-form');
+            const successState = document.getElementById('survey-success-state');
+
+            // Check if user already submitted survey
+            const alreadySubmitted = responses.some(r => r.user_phone === userPhone);
+
+            if (alreadySubmitted) {
+                warningBox.classList.add('hidden');
+                surveyForm.classList.add('hidden');
+                successState.classList.remove('hidden');
+            } else {
+                successState.classList.add('hidden');
+                if (canAnswerSurvey) {
+                    warningBox.classList.add('hidden');
+                    surveyForm.classList.remove('hidden');
+                    renderUserSurveyQuestions();
+                } else {
+                    warningBox.classList.remove('hidden');
+                    warningBox.innerHTML = `
+                        <i class="fas fa-exclamation-triangle mt-0.5 text-sm"></i>
+                        <div>
+                            <p class="font-extrabold leading-relaxed">لطفاً ابتدا حداقل ${threshold} پادکست را بشنوید.</p>
+                            <p class="font-normal mt-1 leading-relaxed text-[11px]">تاکنون شما به ${userListenedCount} پادکست گوش کرده‌اید. پس از شنیدن ۳ تجربه زایمان صوتی، فرم پرسشنامه به‌طور خودکار برای شما فعال خواهد شد.</p>
+                        </div>
+                    `;
+                    surveyForm.classList.add('hidden');
+                }
+            }
+        }
+
+        // Generate inputs for each survey question
+        function renderUserSurveyQuestions() {
+            const container = document.getElementById('survey-questions-container');
+            if (questions.length === 0) {
+                container.innerHTML = '<p class="text-xs text-slate-400 text-center font-bold">هنوز هیچ سوال پژوهشی در سیستم وجود ندارد.</p>';
+                return;
+            }
+
+            container.innerHTML = questions.map((q, index) => {
+                let inputHtml = '';
+
+                if (q.type === 'rating') {
+                    inputHtml = `
+                        <div class="flex flex-row-reverse justify-between items-center gap-1 mt-2">
+                            ${[5, 4, 3, 2, 1].map(score => `
+                                <label class="flex flex-col items-center gap-1.5 cursor-pointer group flex-1">
+                                    <input type="radio" name="q_${q.id}" value="${score}" class="w-5 h-5 text-rose-600 focus:ring-rose-500 border-slate-300" required>
+                                    <span class="text-[10px] text-slate-500 font-bold group-hover:text-rose-600">${score === 5 ? 'خیلی زیاد (۵)' : score === 1 ? 'خیلی کم (۱)' : score}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    `;
+                } else if (q.type === 'choice') {
+                    const opts = q.options || [];
+                    inputHtml = `
+                        <div class="space-y-2 mt-2">
+                            ${opts.map((opt, oIdx) => `
+                                <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-100 hover:bg-slate-50 cursor-pointer text-xs font-bold text-slate-700 transition">
+                                    <input type="radio" name="q_${q.id}" value="${opt}" class="w-4 h-4 text-rose-600 focus:ring-rose-500" required>
+                                    <span>${opt}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                    inputHtml = `
+                        <textarea name="q_${q.id}" rows="3" placeholder="مادر باردار عزیز، لطفاً شرح مختصری از احساس خود را در این بخش مرقوم بفرمایید..." class="w-full mt-2 p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-rose-500 focus:bg-white focus:outline-none transition" required></textarea>
+                    `;
+                }
+
+                return `
+                    <div class="bg-slate-50/50 p-4 rounded-2xl border border-slate-100/80 space-y-2">
+                        <span class="text-[10px] font-black text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full uppercase">سوال ${index + 1}</span>
+                        <h4 class="text-xs sm:text-sm font-extrabold text-slate-800 leading-relaxed">${q.title}</h4>
+                        ${inputHtml}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Submitting responses to research DB
+        function handleSurveySubmit(event) {
+            event.preventDefault();
+            if (!currentUser) return;
+
+            const userPhone = currentUser.phone;
+            const answers = {};
+
+            questions.forEach(q => {
+                if (q.type === 'rating' || q.type === 'choice') {
+                    const selected = document.querySelector(`input[name="q_${q.id}"]:checked`);
+                    answers[q.id] = selected ? selected.value : '';
+                } else {
+                    const textVal = document.querySelector(`textarea[name="q_${q.id}"]`);
+                    answers[q.id] = textVal ? textVal.value.trim() : '';
+                }
+            });
+
+            const userPhoneListened = listenedTracks[userPhone] || [];
+
+            const newResponse = {
+                id: 'resp_' + Date.now(),
+                user_phone: userPhone,
+                user_name: currentUser.name,
+                answers: answers,
+                listened_audios: userPhoneListened,
+                created_at: new Date().toISOString()
+            };
+
+            responses.push(newResponse);
+            localStorage.setItem(STORAGE_KEYS.RESPONSES, JSON.stringify(responses));
+
+            showToast("پاسخنامه شما با موفقیت ثبت شد. صمیمانه سپاسگزاریم!", "success");
+            renderActiveState();
+        }
+
+        // Render functions for tabs
+        let activeAdminTab = 'users';
+
+        function switchAdminTab(tabId) {
+            activeAdminTab = tabId;
+            const tabs = ['users', 'audios', 'questions', 'results', 'supabase'];
+            
+            tabs.forEach(t => {
+                const element = document.getElementById(`admin-tab-${t}`);
+                const btn = document.getElementById(`tab-btn-${t}`);
+                
+                if (t === tabId) {
+                    element.classList.remove('hidden');
+                    btn.className = "w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition text-right bg-rose-50 text-rose-600";
+                } else {
+                    element.classList.add('hidden');
+                    btn.className = "w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition text-right text-slate-600 hover:bg-slate-50";
+                }
+            });
+            renderAdminData();
+        }
+
+        function renderAdminData() {
+            // Summary counters
+            document.getElementById('stat-users-count').innerText = `${users.length} نفر`;
+            document.getElementById('stat-audios-count').innerText = `${audios.length} عدد`;
+            document.getElementById('stat-questions-count').innerText = `${questions.length} سوال`;
+            document.getElementById('stat-responses-count').innerText = `${responses.length} مورد`;
+
+            // Sidebar badges
+            document.getElementById('sidebar-users-count').innerText = users.length;
+            document.getElementById('sidebar-audios-count').innerText = audios.length;
+            document.getElementById('sidebar-questions-count').innerText = questions.length;
+            document.getElementById('sidebar-responses-count').innerText = responses.length;
+
+            if (activeAdminTab === 'users') {
+                renderAdminUsersTable();
+            } else if (activeAdminTab === 'audios') {
+                renderAdminAudiosTable();
+            } else if (activeAdminTab === 'questions') {
+                renderAdminQuestionsManager();
+            } else if (activeAdminTab === 'results') {
+                renderAdminResultsView();
+            }
+        }
+
+        // 1. Admin: Users Table
+        function renderAdminUsersTable() {
+            const body = document.getElementById('table-users-body');
+            if (users.length === 0) {
+                body.innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-slate-400 font-bold">هیچ کاربری ثبت نشده است. از فرم فوق برای ایجاد کاربر جدید استفاده کنید.</td></tr>`;
+                return;
+            }
+
+            body.innerHTML = users.map(u => {
+                const listened = listenedTracks[u.phone] || [];
+                return `
+                    <tr class="hover:bg-slate-50/50 transition">
+                        <td class="px-6 py-4 font-bold text-slate-800">${u.name}</td>
+                        <td class="px-6 py-4 text-center font-mono font-bold text-xs">${u.phone}</td>
+                        <td class="px-6 py-4 text-center font-mono text-xs text-slate-500">${u.password}</td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="bg-rose-50 text-rose-700 text-xs font-bold px-2.5 py-1 rounded-full">${listened.length} فایل</span>
+                        </td>
+                        <td class="px-6 py-4 text-left space-x-1 flex flex-row-reverse gap-1.5">
+                            <button onclick="deleteUser('${u.id}')" class="bg-red-50 text-red-600 hover:bg-red-100 p-1.5 rounded-lg text-xs transition" title="حذف کاربر">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <button onclick="editUser('${u.id}')" class="bg-blue-50 text-blue-600 hover:bg-blue-100 p-1.5 rounded-lg text-xs transition" title="ویرایش کاربر">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // 2. Admin: Audios Table
+        function renderAdminAudiosTable() {
+            const body = document.getElementById('table-audios-body');
+            if (audios.length === 0) {
+                body.innerHTML = `<tr><td colspan="4" class="px-6 py-8 text-center text-slate-400 font-bold">هیچ پادکستی وجود ندارد. حداکثر ۵۰ فایل صوتی می‌توانید اضافه کنید.</td></tr>`;
+                return;
+            }
+
+            body.innerHTML = audios.map(a => `
+                <tr class="hover:bg-slate-50/50 transition">
+                    <td class="px-6 py-4 font-bold text-slate-800">${a.title}</td>
+                    <td class="px-6 py-4 text-xs text-slate-500 max-w-xs truncate">${a.description || '-'}</td>
+                    <td class="px-6 py-4 text-center">
+                        <a href="${a.url}" target="_blank" class="text-blue-500 hover:underline text-xs font-mono truncate block max-w-[150px]" title="${a.url}">${a.url}</a>
+                    </td>
+                    <td class="px-6 py-4 text-left space-x-1 flex flex-row-reverse gap-1.5">
+                        <button onclick="deleteAudio('${a.id}')" class="bg-red-50 text-red-600 hover:bg-red-100 p-1.5 rounded-lg text-xs transition">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <button onclick="editAudio('${a.id}')" class="bg-blue-50 text-blue-600 hover:bg-blue-100 p-1.5 rounded-lg text-xs transition">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 3. Admin: Questions Manager List
+        function renderAdminQuestionsManager() {
+            const list = document.getElementById('questions-list-manager');
+            if (questions.length === 0) {
+                list.innerHTML = `<div class="text-center py-8 text-slate-400">هیچ سوالی وجود ندارد.</div>`;
+                return;
+            }
+
+            list.innerHTML = questions.map((q, index) => {
+                let badge = 'طیف امتیازی';
+                let badgeColor = 'bg-blue-50 text-blue-700 border-blue-200';
+                if (q.type === 'choice') {
+                    badge = 'چند گزینه‌ای';
+                    badgeColor = 'bg-amber-50 text-amber-700 border-amber-200';
+                } else if (q.type === 'text') {
+                    badge = 'تشریحی آزاد';
+                    badgeColor = 'bg-purple-50 text-purple-700 border-purple-200';
+                }
+
+                return `
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200/80 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div class="space-y-1.5">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs bg-slate-100 text-slate-600 font-bold px-2 py-0.5 rounded-lg">سوال ${index+1}</span>
+                                <span class="text-[10px] border px-2 py-0.5 rounded-lg font-bold ${badgeColor}">${badge}</span>
+                            </div>
+                            <h4 class="text-sm font-extrabold text-slate-800">${q.title}</h4>
+                            ${q.options ? `<p class="text-[11px] text-slate-400">گزینه‌ها: ${q.options.join(' | ')}</p>` : ''}
+                        </div>
+                        <div class="flex gap-1">
+                            <button onclick="deleteQuestion('${q.id}')" class="bg-red-50 text-red-600 hover:bg-red-100 p-2 rounded-xl text-xs transition">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <button onclick="editQuestion('${q.id}')" class="bg-blue-50 text-blue-600 hover:bg-blue-100 p-2 rounded-xl text-xs transition">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Toggle Dynamic Options Inputs
+        function toggleOptionsInput() {
+            const type = document.getElementById('question-input-type').value;
+            const container = document.getElementById('question-options-container');
+            if (type === 'choice') {
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        // 4. Admin: Results and Matrix rendering
+        function renderAdminResultsView() {
+            const container = document.getElementById('results-records-container');
+            
+            // Statistics calculations
+            const participatedCount = responses.length;
+            document.getElementById('results-participated').innerText = `${participatedCount} نفر`;
+            
+            let totalListenedCount = 0;
+            responses.forEach(r => {
+                totalListenedCount += (r.listened_audios || []).length;
+            });
+            document.getElementById('results-listened').innerText = `${totalListenedCount} فایل صوتی`;
+            
+            const rateVal = users.length > 0 ? Math.round((participatedCount / users.length) * 100) : 0;
+            document.getElementById('results-rate').innerText = `${rateVal}٪`;
+
+            if (responses.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-slate-400 border border-dashed border-slate-200 rounded-3xl">
+                        <i class="fas fa-folder-open text-3xl mb-3 text-slate-300"></i>
+                        <p class="text-sm font-bold">هنوز هیچ پاسخی در نظرسنجی ثبت نشده است.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = responses.map((resp, rIdx) => {
+                return `
+                    <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+                        <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+                            <div>
+                                <h4 class="text-sm font-extrabold text-slate-800">${resp.user_name}</h4>
+                                <span class="text-[10px] text-slate-400 font-mono">شماره همراه: ${resp.user_phone}</span>
+                            </div>
+                            <span class="text-[10px] bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full font-bold">شنیده شده: ${(resp.listened_audios || []).length} فایل</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            ${Object.keys(resp.answers).map(qId => {
+                                const matchedQ = questions.find(q => q.id === qId);
+                                const qTitle = matchedQ ? matchedQ.title : 'سوال حذف شده';
+                                return `
+                                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100/50 space-y-1">
+                                        <div class="text-[10px] font-bold text-rose-500">${qTitle}</div>
+                                        <div class="text-xs font-black text-slate-700">${resp.answers[qId]}</div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Manage user additions & edits
+        function saveUser(event) {
+            event.preventDefault();
+            const id = document.getElementById('edit-user-id').value;
+            const name = document.getElementById('user-input-name').value.trim();
+            const phone = document.getElementById('user-input-phone').value.trim();
+            const password = document.getElementById('user-input-password').value.trim();
+
+            if (id) {
+                // Update
+                const index = users.findIndex(u => u.id === id);
+                if (index !== -1) {
+                    users[index] = { ...users[index], name, phone, password };
+                    showToast("اطلاعات مادر پژوهش با موفقیت ویرایش شد.", "success");
+                }
+            } else {
+                // Check unique
+                if (users.some(u => u.phone === phone)) {
+                    showToast("کاربری با این شماره تلفن از قبل در سیستم موجود است.", "error");
+                    return;
+                }
+                // Insert
+                const newUser = { id: 'u_' + Date.now(), name, phone, password };
+                users.push(newUser);
+                showToast("کاربر جدید ثبت شد و دسترسی فعال گردید.", "success");
+            }
+
+            localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+            document.getElementById('admin-user-form').reset();
+            document.getElementById('edit-user-id').value = '';
+            renderAdminData();
+        }
+
+        function editUser(id) {
+            const u = users.find(user => user.id === id);
+            if (!u) return;
+            document.getElementById('edit-user-id').value = u.id;
+            document.getElementById('user-input-name').value = u.name;
+            document.getElementById('user-input-phone').value = u.phone;
+            document.getElementById('user-input-password').value = u.password;
+            showToast("اطلاعات کاربر به فرم انتقال یافت. پس از تغییرات دکمه ثبت را مجدد بزنید.", "info");
+        }
+
+        function deleteUser(id) {
+            if (confirm("آیا از حذف این کاربر مطمئن هستید؟ دسترسی او قطع خواهد شد.")) {
+                users = users.filter(u => u.id !== id);
+                localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+                showToast("کاربر با موفقیت حذف گردید.", "success");
+                renderAdminData();
+            }
+        }
+
+        // Manage audio additions & edits
+        function saveAudio(event) {
+            event.preventDefault();
+            const id = document.getElementById('edit-audio-id').value;
+            const title = document.getElementById('audio-input-title').value.trim();
+            const description = document.getElementById('audio-input-desc').value.trim();
+            const url = document.getElementById('audio-input-url').value.trim();
+
+            if (id) {
+                const index = audios.findIndex(a => a.id === id);
+                if (index !== -1) {
+                    audios[index] = { ...audios[index], title, description, url };
+                    showToast("فایل صوتی با موفقیت ویرایش شد.", "success");
+                }
+            } else {
+                const newAudio = { id: 'a_' + Date.now(), title, description, url };
+                audios.push(newAudio);
+                showToast("پادکست جدید به آرشیو پژوهش افزوده شد.", "success");
+            }
+
+            localStorage.setItem(STORAGE_KEYS.AUDIOS, JSON.stringify(audios));
+            document.getElementById('admin-audio-form').reset();
+            document.getElementById('edit-audio-id').value = '';
+            renderAdminData();
+        }
+
+        function editAudio(id) {
+            const a = audios.find(aud => aud.id === id);
+            if (!a) return;
+            document.getElementById('edit-audio-id').value = a.id;
+            document.getElementById('audio-input-title').value = a.title;
+            document.getElementById('audio-input-desc').value = a.description;
+            document.getElementById('audio-input-url').value = a.url;
+            showToast("اطلاعات پادکست به فرم انتقال یافت.", "info");
+        }
+
+        function deleteAudio(id) {
+            if (confirm("آیا از حذف این پادکست پژوهشی مطمئن هستید؟")) {
+                audios = audios.filter(a => a.id !== id);
+                localStorage.setItem(STORAGE_KEYS.AUDIOS, JSON.stringify(audios));
+                showToast("پادکست حذف گردید.", "success");
+                renderAdminData();
+            }
+        }
+
+        // Manage questionnaire questions additions & edits
+        function saveQuestion(event) {
+            event.preventDefault();
+            const id = document.getElementById('edit-question-id').value;
+            const title = document.getElementById('question-input-title').value.trim();
+            const type = document.getElementById('question-input-type').value;
+            const rawOptions = document.getElementById('question-input-options').value.trim();
+            
+            let options = null;
+            if (type === 'choice' && rawOptions) {
+                options = rawOptions.split(',').map(o => o.trim()).filter(Boolean);
+            }
+
+            if (id) {
+                const index = questions.findIndex(q => q.id === id);
+                if (index !== -1) {
+                    questions[index] = { ...questions[index], title, type, options };
+                    showToast("سوال پژوهش ویرایش شد.", "success");
+                }
+            } else {
+                const newQuestion = { id: 'q_' + Date.now(), title, type, options };
+                questions.push(newQuestion);
+                showToast("سوال جدید به لیست پرسشنامه نهایی اضافه شد.", "success");
+            }
+
+            localStorage.setItem(STORAGE_KEYS.QUESTIONS, JSON.stringify(questions));
+            document.getElementById('admin-question-form').reset();
+            document.getElementById('edit-question-id').value = '';
+            document.getElementById('question-options-container').classList.add('hidden');
+            renderAdminData();
+        }
+
+        function editQuestion(id) {
+            const q = questions.find(ques => ques.id === id);
+            if (!q) return;
+            document.getElementById('edit-question-id').value = q.id;
+            document.getElementById('question-input-title').value = q.title;
+            document.getElementById('question-input-type').value = q.type;
+            
+            if (q.type === 'choice') {
+                document.getElementById('question-options-container').classList.remove('hidden');
+                document.getElementById('question-input-options').value = q.options ? q.options.join(', ') : '';
+            } else {
+                document.getElementById('question-options-container').classList.add('hidden');
+            }
+            showToast("اطلاعات سوال بارگذاری شد.", "info");
+        }
+
+        function deleteQuestion(id) {
+            if (confirm("آیا از حذف این سوال پرسشنامه مطمئن هستید؟")) {
+                questions = questions.filter(q => q.id !== id);
+                localStorage.setItem(STORAGE_KEYS.QUESTIONS, JSON.stringify(questions));
+                showToast("سوال حذف گردید.", "success");
+                renderAdminData();
+            }
+        }
+
+        // Utility to export results to CSV for SPSS/Excel integration
+        function exportToExcel() {
+            if (responses.length === 0) {
+                showToast("پاسخنامه‌ای برای خروجی یافت نشد.", "error");
+                return;
+            }
+
+            // Assemble Excel/CSV structure
+            let csvContent = "\ufeff"; // BOM wrapper to support Farsi character sets in MS Excel
+            
+            // Build header columns
+            const headers = ["شناسه کاربر", "نام و نام خانوادگی", "شماره همراه", "پادکستهای شنیده شده", "تاریخ ثبت پاسخ"];
+            questions.forEach((q, idx) => {
+                headers.push(`سوال ${idx + 1}: ${q.title}`);
+            });
+            csvContent += headers.map(h => `"${h.replace(/"/g, '""')}"`).join(",") + "\r\n";
+
+            // Build rows
+            responses.forEach(resp => {
+                const row = [
+                    resp.id,
+                    resp.user_name,
+                    resp.user_phone,
+                    (resp.listened_audios || []).length,
+                    resp.created_at
+                ];
+                
+                questions.forEach(q => {
+                    row.push(resp.answers[q.id] || "");
+                });
+
+                csvContent += row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",") + "\r\n";
+            });
+
+            // Trigger file download dynamically
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `نتایج_پژوهش_تجربیات_زایمان_${new Date().toISOString().slice(0,10)}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("فایل خروجی با موفقیت در مرورگر دانلود شد.", "success");
+        }
+
+        // Clipboard Copy Helper
+        function copyToClipboard(elementId) {
+            const pre = document.getElementById(elementId);
+            const text = pre.innerText;
+            
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed'; // Avoid scrolling to bottom
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                showToast("کد با موفقیت در حافظه موقت (Clipboard) کپی شد. اکنون می‌توانید آن را در Supabase پیست کنید.", "success");
+            } catch (err) {
+                showToast("کپی متاسفانه ناموفق بود.", "error");
+            }
+            
+            document.body.removeChild(textarea);
+        }
+    </script>
+</body>
+</html>
