@@ -192,9 +192,10 @@
                             <!-- Native Custom Audio Player -->
                             <div class="mt-6 space-y-3">
                                 <audio id="main-audio-element" class="w-full" controls preload="metadata"></audio>
+                                <iframe id="drive-audio-preview" class="hidden w-full h-36 sm:h-40 rounded-xl bg-white" allow="autoplay" loading="lazy"></iframe>
                                 <div class="flex flex-col sm:flex-row justify-between items-center gap-2 pt-2 border-t border-white/10">
                                     <p class="text-xs text-slate-400 text-center sm:text-right">
-                                        ⚠️ اگر پخش‌کننده به درستی کار نمی‌کند، از دکمه زیر جهت شنیدن مستقیم استفاده کنید.
+                                        اگر پخش داخل صفحه کار نکرد، از دکمه زیر برای شنیدن مستقیم فایل استفاده کنید.
                                     </p>
                                     <a id="active-track-external-link" target="_blank" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
                                         <i class="fas fa-external-link-alt"></i>
@@ -274,9 +275,6 @@
                     <p class="text-sm text-slate-400 mt-2">کنترل متغیرها، سوالات، پادکست‌ها، حساب کاربری شنوندگان و استخراج داده‌های پژوهش</p>
                 </div>
                 <div class="flex flex-wrap gap-2">
-                    <button onclick="seedInitialData()" class="bg-rose-600/30 text-rose-300 border border-rose-500/30 hover:bg-rose-600/40 px-3 py-1.5 rounded-lg text-xs font-bold transition">
-                        <i class="fas fa-database mr-1"></i> بازنشانی به داده‌های اولیه پژوهش
-                    </button>
                     <button onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5">
                         <i class="fas fa-file-csv"></i> دانلود اکسل نتایج نظرسنجی
                     </button>
@@ -344,12 +342,6 @@
                                 <i class="fas fa-poll"></i> نتایج و تحلیل پژوهش
                             </span>
                             <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-black" id="sidebar-responses-count">۰</span>
-                        </button>
-                        <button onclick="switchAdminTab('supabase')" id="tab-btn-supabase" class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition text-right text-slate-600 hover:bg-slate-50">
-                            <span class="flex items-center gap-2.5">
-                                <i class="fas fa-cloud-upload-alt text-emerald-500"></i> تنظیمات Supabase
-                            </span>
-                            <span class="text-xs bg-emerald-500 text-white px-2 py-0.5 rounded">ویژه</span>
                         </button>
                     </div>
                 </div>
@@ -525,7 +517,7 @@
                             <div>
                                 <h4 class="text-sm font-bold text-slate-700 mb-3 flex items-center gap-1.5"><i class="fas fa-stethoscope text-rose-500"></i> خروجی متغیرهای پژوهش:</h4>
                                 <p class="text-xs text-slate-500 leading-relaxed">
-                                    داده‌های جمع‌آوری شده در قالب استاندارد برای ورود به نرم‌افزار SPSS یا R و Supabase طراحی شده‌اند. شما می‌توانید جهت محاسبات همبستگی در پایان مطالعه، داده‌ها را مستقیماً از بخش بالای صفحه در قالب فایل Excel خروجی بگیرید.
+                                    داده‌های جمع‌آوری شده در قالب استاندارد برای ورود به نرم‌افزار SPSS یا R طراحی شده‌اند. شما می‌توانید جهت محاسبات همبستگی در پایان مطالعه، داده‌ها را مستقیماً از بخش بالای صفحه در قالب فایل Excel خروجی بگیرید.
                                 </p>
                             </div>
                         </div>
@@ -536,74 +528,6 @@
                             <div class="text-center py-12 text-slate-400">
                                 <i class="fas fa-folder-open text-3xl mb-3"></i>
                                 <p class="text-sm">هنوز پاسخی در نظرسنجی ثبت نشده است.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tab Content: Supabase & GitHub Guide -->
-                    <div id="admin-tab-supabase" class="hidden bg-white rounded-3xl p-6 border border-slate-200/60 shadow-sm space-y-6">
-                        <div class="pb-4 border-b border-slate-100">
-                            <h3 class="text-lg font-black text-emerald-600 flex items-center gap-2">
-                                <i class="fas fa-database"></i>
-                                <span>مراحل استقرار در Supabase و وب‌سایت GitHub Pages</span>
-                            </h3>
-                            <p class="text-xs text-slate-400 mt-1">با کپی کردن این کدها، وب‌سایت شما به صورت کاملا رایگان آنلاین و متصل به بانک اطلاعاتی دائمی خواهد شد.</p>
-                        </div>
-
-                        <div class="space-y-4">
-                            <div>
-                                <h4 class="text-sm font-bold text-slate-700 mb-2 flex items-center gap-1.5"><span class="w-5 h-5 bg-rose-100 text-rose-600 rounded-full text-xs flex items-center justify-center font-bold">۱</span> گام اول: فعال‌سازی Supabase</h4>
-                                <p class="text-xs text-slate-500 leading-relaxed mb-2">
-                                    یک پروژه در <a href="https://supabase.com" target="_blank" class="text-emerald-500 underline">Supabase.com</a> بسازید، سپس به بخش <strong>SQL Editor</strong> بروید، کد زیر را کپی کرده و اجرا (Run) کنید تا کل جدول‌های موردنیاز ایجاد شوند:
-                                </p>
-                                <div class="relative bg-slate-900 rounded-2xl p-4 font-mono text-[10px] sm:text-xs text-left text-teal-400 overflow-x-auto">
-                                    <button onclick="copyToClipboard('supabase-sql-code')" class="absolute top-3 right-3 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-3 py-1.5 rounded-lg text-[10px] font-sans font-bold transition">کپی اسکریپت SQL</button>
-                                    <pre id="supabase-sql-code">
--- Table 1: Users registered by Admin
-CREATE TABLE public.users (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  name TEXT NOT NULL,
-  phone VARCHAR(20) UNIQUE NOT NULL,
-  password TEXT NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Table 2: Audio files
-CREATE TABLE public.audios (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  title TEXT NOT NULL,
-  description TEXT,
-  url TEXT NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Table 3: Questionnaire Questions
-CREATE TABLE public.questions (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  title TEXT NOT NULL,
-  type VARCHAR(20) NOT NULL, -- 'rating', 'choice', 'text'
-  options TEXT[], -- Array of choices
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Table 4: Survey Responses
-CREATE TABLE public.responses (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_phone VARCHAR(20) NOT NULL,
-  answers JSONB NOT NULL,
-  listened_audios TEXT[],
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);</pre>
-                                </div>
-                            </div>
-
-                            <hr class="border-slate-100">
-
-                            <div>
-                                <h4 class="text-sm font-bold text-slate-700 mb-2 flex items-center gap-1.5"><span class="w-5 h-5 bg-rose-100 text-rose-600 rounded-full text-xs flex items-center justify-center font-bold">۲</span> گام دوم: اتصال GitHub Pages</h4>
-                                <p class="text-xs text-slate-500 leading-relaxed">
-                                    این فایل تک‌صفحه‌ای <code class="bg-slate-100 px-1 py-0.5 rounded text-rose-600 font-mono">index.html</code> را در مخزن گیت‌هاب آپلود نموده و از بخش Settings سربرگ <strong>Pages</strong> را فعال کنید تا وب‌سایت پژوهش برای تمام مادران باردار در دسترس قرار گیرد.
-                                </p>
                             </div>
                         </div>
                     </div>
@@ -629,7 +553,7 @@ CREATE TABLE public.responses (
 
     <!-- ================= JAVASCRIPT LOGIC & DATABASE ENGINE ================= -->
     <script>
-        // LocalStorage keys and fallback simulation engine
+        // Local cache keys and Google Sheets backend configuration
         const STORAGE_KEYS = {
             USERS: 'maternal_study_users',
             AUDIOS: 'maternal_study_audios',
@@ -639,30 +563,57 @@ CREATE TABLE public.responses (
             LISTENED_TRACKS: 'maternal_study_listened_tracks_v1'
         };
 
-        // Standard Scientific Initial Data to populate when database is empty
-        const INITIAL_USERS = [
-            { id: 'u1', name: 'مریم رضایی (نمونه اول بارداری)', phone: '09121111111', password: '1234' },
-            { id: 'u2', name: 'زهرا میرزایی (نمونه دوم بارداری)', phone: '09122222222', password: '1234' },
-            { id: 'u3', name: 'فاطمه السادات احمدی', phone: '09123333333', password: '1234' }
+        const API_CONFIG = {
+            BASE_URL: 'https://script.google.com/macros/s/AKfycbzZIQTpjaPoarf-uX3ZzA5Hm0-LrIBXekB1Okv1Z4aMlwv-E7P6xWJ3TsuqY6y_sUPC9Q/exec',
+            REQUIRED_BACKEND_VERSION: '2026-07-15-sheets-crud-v4'
+        };
+
+        const LOCAL_AUDIO_FALLBACKS = [
+            { id: 'local_mothermate_01', title: 'فایل صوتی 01', description: 'فایل صوتی محلی پژوهش', url: '../mothermate01.mp3' },
+            { id: 'local_mothermate_02', title: 'فایل صوتی 02', description: 'فایل صوتی محلی پژوهش', url: '../mothermate02.mp3' },
+            { id: 'local_mothermate_03', title: 'فایل صوتی 03', description: 'فایل صوتی محلی پژوهش', url: '../mothermate03.mp3' },
+            { id: 'local_mothermate_04', title: 'فایل صوتی 04', description: 'فایل صوتی محلی پژوهش', url: '../mothermate04.mp3' },
+            { id: 'local_mothermate_05', title: 'فایل صوتی 05', description: 'فایل صوتی محلی پژوهش', url: '../mothermate05.mp3' },
+            { id: 'local_mothermate_06', title: 'فایل صوتی 06', description: 'فایل صوتی محلی پژوهش', url: '../mothermate06.mp3' }
         ];
 
-        const INITIAL_AUDIOS = [
-            { id: 'a1', title: 'قسمت اول: غلبه بر ترس زایمان و تکنیک‌های ذهنی آرامش', description: 'به گویندگی دکتر سمیرا کریمی (متخصص روانشناسی مامایی) - ۲۲ دقیقه', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
-            { id: 'a2', title: 'قسمت دوم: تجربه مامان سارا از زایمان طبیعی فیزیولوژیک بدون مداخله', description: 'پادکست مصاحبه انگیزشی - ۱۵ دقیقه مفید', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
-            { id: 'a3', title: 'قسمت سوم: نقش کلیدی همراه مامان و ورزش‌های تنفسی در اتاق زایمان', description: 'کارگاه صوتی آموزش کنترل دم و بازدم زایمان - ۳۰ دقیقه', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
-            { id: 'a4', title: 'قسمت چهارم: رویارویی با دردهای کاذب و آمادگی کامل برای حضور در بیمارستان', description: 'راهنمای جامع صوتی مناسب برای هفته ۳۵ به بعد - ۱۸ دقیقه', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' },
-            { id: 'a5', title: 'قسمت پنجم: تجربیات زایمان طبیعی پس از سزارین (وی‌بک) چقدر واقعی است؟', description: 'گفتگوی شنیدنی مادران باتجربه - ۲۵ دقیقه', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' }
-        ];
+        function normalizeAudioUrl(url) {
+            const value = String(url || '').trim();
+            const driveMatch = value.match(/drive\.google\.com\/file\/d\/([^/]+)/) || value.match(/[?&]id=([^&]+)/);
+            if (driveMatch) {
+                return `https://drive.google.com/uc?export=download&id=${driveMatch[1]}`;
+            }
+            return value;
+        }
 
-        const INITIAL_QUESTIONS = [
-            { id: 'q1', title: 'شنیدن تجربیات و پادکست‌ها، تا چه حد ترس شما را از زایمان طبیعی کاهش داد؟', type: 'rating' },
-            { id: 'q2', title: 'آیا بعد از شنیدن این قسمت‌ها، نظر شما درمورد نوع زایمان انتخابی‌تان تغییر کرد؟', type: 'choice', options: ['بله، کاملاً نظرم عوض شد و زایمان طبیعی را انتخاب می‌کنم', 'خیر، از ابتدا تصمیمم قاطع بود و پادکست‌ها آن را تقویت کردند', 'تغییری نکرد، همچنان زایمان سزارین را ایمن‌تر میدانم', 'نظری ندارم / همچنان مردد هستم'] },
-            { id: 'q3', title: 'احساس توانمندی و اعتماد‌به‌نفس شما جهت مدیریت درد زایمان پس از آگاهی از این تجارب چقدر است؟', type: 'rating' },
-            { id: 'q4', title: 'به عنوان یک شنونده باردار، کدام پادکست صوتی یا کدام تجربه برایتان الهام‌بخش‌تر و کاربردی‌تر بود؟', type: 'text' },
-            { id: 'q5', title: 'آیا مایل هستید این پادکست‌ها را به دیگر دوستان یا بستگان باردار خود معرفی نمایید؟', type: 'choice', options: ['بله حتماً', 'احتمالاً بله', 'خیر مایل نیستم'] }
-        ];
+        function firstValue(record, keys) {
+            for (const key of keys) {
+                const value = record?.[key];
+                if (value !== undefined && value !== null && String(value).trim()) {
+                    return String(value).trim();
+                }
+            }
+            const normalizedKeys = keys.map(key => String(key).trim().toLowerCase());
+            for (const [recordKey, value] of Object.entries(record || {})) {
+                if (normalizedKeys.includes(String(recordKey).trim().toLowerCase()) && value !== undefined && value !== null && String(value).trim()) {
+                    return String(value).trim();
+                }
+            }
+            return '';
+        }
 
-        const INITIAL_RESPONSES = [];
+        function normalizeAudioList(items) {
+            return (items || []).map((audio, index) => {
+                const url = firstValue(audio, ['url', 'URL', 'audio_url', 'file_url', 'link', 'drive_url', 'لینک', 'آدرس', 'فایل']);
+                return {
+                    ...audio,
+                    id: firstValue(audio, ['id', 'audio_id', 'شناسه']) || `a_${index + 1}`,
+                    title: firstValue(audio, ['title', 'name', 'audio_title', 'عنوان', 'نام']) || `فایل صوتی ${index + 1}`,
+                    description: firstValue(audio, ['description', 'desc', 'caption', 'توضیح', 'توضیحات']),
+                    url: normalizeAudioUrl(url)
+                };
+            }).filter(audio => audio.url);
+        }
 
         // Global State Variables
         let users = [];
@@ -673,35 +624,22 @@ CREATE TABLE public.responses (
         let listenedTracks = {}; // Format: { userPhone: [audioId1, audioId2] }
 
         // Bootstrapping function
-        window.onload = function() {
-            initStorage();
-            renderActiveState();
+        window.onload = async function() {
             setupAudioEventListeners();
+            await initAppData();
+            renderActiveState();
         };
 
-        // Initialize Local DB
-        function initStorage() {
-            if (!localStorage.getItem(STORAGE_KEYS.USERS)) {
-                localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(INITIAL_USERS));
-            }
-            if (!localStorage.getItem(STORAGE_KEYS.AUDIOS)) {
-                localStorage.setItem(STORAGE_KEYS.AUDIOS, JSON.stringify(INITIAL_AUDIOS));
-            }
-            if (!localStorage.getItem(STORAGE_KEYS.QUESTIONS)) {
-                localStorage.setItem(STORAGE_KEYS.QUESTIONS, JSON.stringify(INITIAL_QUESTIONS));
-            }
-            if (!localStorage.getItem(STORAGE_KEYS.RESPONSES)) {
-                localStorage.setItem(STORAGE_KEYS.RESPONSES, JSON.stringify(INITIAL_RESPONSES));
-            }
+        function initializeLocalSessionData() {
+            localStorage.removeItem(STORAGE_KEYS.USERS);
+            localStorage.removeItem(STORAGE_KEYS.AUDIOS);
+            localStorage.removeItem(STORAGE_KEYS.QUESTIONS);
+            localStorage.removeItem(STORAGE_KEYS.RESPONSES);
+
             if (!localStorage.getItem(STORAGE_KEYS.LISTENED_TRACKS)) {
                 localStorage.setItem(STORAGE_KEYS.LISTENED_TRACKS, JSON.stringify({}));
             }
 
-            // Sync from storage to memory
-            users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS));
-            audios = JSON.parse(localStorage.getItem(STORAGE_KEYS.AUDIOS));
-            questions = JSON.parse(localStorage.getItem(STORAGE_KEYS.QUESTIONS));
-            responses = JSON.parse(localStorage.getItem(STORAGE_KEYS.RESPONSES));
             listenedTracks = JSON.parse(localStorage.getItem(STORAGE_KEYS.LISTENED_TRACKS));
             
             const savedUser = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
@@ -710,14 +648,105 @@ CREATE TABLE public.responses (
             }
         }
 
-        // Reset database handler
-        function seedInitialData() {
-            if(confirm("آیا از بازنشانی بانک اطلاعاتی به حالت پیش‌فرض اولیه مطمئن هستید؟ تمام داده‌های پاسخ‌ها و کاربران جدید حذف خواهند شد.")) {
-                localStorage.clear();
-                initStorage();
-                showToast("اطلاعات پژوهش به داده‌های اولیه بازنشانی شد.", "success");
-                renderActiveState();
+        async function initAppData() {
+            initializeLocalSessionData();
+
+            if (!API_CONFIG.BASE_URL) {
+                showToast("Google Sheets API تنظیم نشده است.", "error");
+                return;
             }
+
+            try {
+                const payload = await apiRequest('bootstrap');
+                users = payload.users || [];
+                audios = normalizeAudioList(payload.audios);
+                if (!audios.length) {
+                    audios = normalizeAudioList(LOCAL_AUDIO_FALLBACKS);
+                }
+                questions = payload.questions || [];
+                responses = payload.responses || [];
+                if (payload.version !== API_CONFIG.REQUIRED_BACKEND_VERSION) {
+                    showToast("Google Apps Script قدیمی است. Code.gs را Deploy کنید.", "warning");
+                }
+                if (currentUser && !users.some(user => user.id === currentUser.id && user.phone === currentUser.phone)) {
+                    currentUser = null;
+                    localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+                }
+            } catch (error) {
+                console.error(error);
+                users = [];
+                audios = normalizeAudioList(LOCAL_AUDIO_FALLBACKS);
+                questions = [];
+                responses = [];
+                showToast("اتصال به گوگل شیت برقرار نشد.", "error");
+            }
+        }
+
+        async function apiRequest(action, body = null) {
+            return apiJsonpRequest(action, body);
+        }
+
+        function apiJsonpRequest(action, body = null) {
+            return new Promise((resolve, reject) => {
+                const callbackName = `maternalStudyCallback_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+                const url = new URL(API_CONFIG.BASE_URL);
+                url.searchParams.set('action', action);
+                url.searchParams.set('callback', callbackName);
+
+                if (body) {
+                    url.searchParams.set('payload', JSON.stringify(body));
+                }
+
+                const script = document.createElement('script');
+                const cleanup = () => {
+                    delete window[callbackName];
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
+                };
+
+                const timeoutId = window.setTimeout(() => {
+                    cleanup();
+                    reject(new Error('Request timeout'));
+                }, 15000);
+
+                window[callbackName] = (result) => {
+                    window.clearTimeout(timeoutId);
+                    cleanup();
+
+                    if (!result || !result.ok) {
+                        const message = result?.message || 'API request failed';
+                        if (message === 'Unknown action') {
+                            reject(new Error('Google Apps Script قدیمی است و این عملیات را نمی‌شناسد. Code.gs را Deploy کنید.'));
+                            return;
+                        }
+                        reject(new Error(message));
+                        return;
+                    }
+
+                    resolve(result.data);
+                };
+
+                script.onerror = () => {
+                    window.clearTimeout(timeoutId);
+                    cleanup();
+                    reject(new Error('Script load failed'));
+                };
+
+                script.src = url.toString();
+                document.body.appendChild(script);
+            });
+        }
+
+        function reloadFromGoogleSheets() {
+            localStorage.removeItem(STORAGE_KEYS.USERS);
+            localStorage.removeItem(STORAGE_KEYS.AUDIOS);
+            localStorage.removeItem(STORAGE_KEYS.QUESTIONS);
+            localStorage.removeItem(STORAGE_KEYS.RESPONSES);
+            initAppData().then(() => {
+                showToast("داده‌ها از Google Sheets بارگذاری شد.", "success");
+                renderActiveState();
+            });
         }
 
         // Custom elegant notification helper
@@ -833,7 +862,7 @@ CREATE TABLE public.responses (
             const adminSec = document.getElementById('section-admin');
             if (adminSec.classList.contains('hidden')) {
                 // Pin Verification for security
-                const pin = prompt("جهت ورود به پنل ادمین رمز عبور را وارد کنید (رمز پیش‌فرض: admin123):");
+                const pin = prompt("جهت ورود به پنل ادمین رمز عبور را وارد کنید:");
                 if (pin === "admin123") {
                     adminSec.classList.remove('hidden');
                     showToast("ورود موفقیت‌آمیز به پنل مدیریت پژوهش", "success");
@@ -850,7 +879,7 @@ CREATE TABLE public.responses (
         }
 
         // Manage logins
-        function handleLogin(event) {
+        async function handleLogin(event) {
             event.preventDefault();
             const phone = document.getElementById('login-phone').value.trim();
             const password = document.getElementById('login-password').value.trim();
@@ -860,7 +889,15 @@ CREATE TABLE public.responses (
                 return;
             }
 
-            const matchedUser = users.find(u => u.phone === phone && u.password === password);
+            let matchedUser = null;
+
+            try {
+                matchedUser = await apiRequest('login', { phone, password });
+            } catch (error) {
+                console.error(error);
+                showToast(`ورود به گوگل شیت ناموفق بود: ${error.message}`, "error");
+                return;
+            }
 
             if (matchedUser) {
                 currentUser = matchedUser;
@@ -882,11 +919,25 @@ CREATE TABLE public.responses (
         // Listeners for tracking user behavior
         function setupAudioEventListeners() {
             const audio = document.getElementById('main-audio-element');
+            const listeningStatus = document.getElementById('listening-status');
             audio.onplay = function() {
                 const activeId = audio.getAttribute('data-active-id');
+                listeningStatus.innerText = 'درحال پخش';
                 if (activeId && currentUser) {
                     markTrackAsListened(activeId);
                 }
+            };
+            audio.onpause = function() {
+                if (!audio.ended) {
+                    listeningStatus.innerText = 'آماده پخش';
+                }
+            };
+            audio.onended = function() {
+                listeningStatus.innerText = 'پخش کامل شد';
+            };
+            audio.onerror = function() {
+                listeningStatus.innerText = 'خطا در پخش فایل';
+                showToast("فایل صوتی قابل پخش نیست. لینک فایل را بررسی کنید.", "error");
             };
         }
 
@@ -906,29 +957,58 @@ CREATE TABLE public.responses (
             }
         }
 
+        function extractGoogleDriveFileId(url) {
+            const match = String(url || '').match(/\/d\/([^/]+)/) || String(url || '').match(/[?&]id=([^&]+)/);
+            return match ? match[1] : '';
+        }
+
+        function isGoogleDriveAudio(url) {
+            return /drive\.google\.com|googleusercontent\.com/.test(String(url || ''));
+        }
+
+        function buildGoogleDrivePreviewUrl(url) {
+            const fileId = extractGoogleDriveFileId(url);
+            return fileId ? `https://drive.google.com/file/d/${fileId}/preview` : url;
+        }
+
         function selectAudioTrack(audioId) {
             const audio = audios.find(a => a.id === audioId);
             if (!audio) return;
 
             const playerCard = document.getElementById('active-player-card');
             const audioElement = document.getElementById('main-audio-element');
+            const drivePreview = document.getElementById('drive-audio-preview');
             const activeTitle = document.getElementById('active-track-title');
             const activeIndex = document.getElementById('active-track-index');
             const activeExtLink = document.getElementById('active-track-external-link');
+            const playableUrl = normalizeAudioUrl(audio.url);
 
             playerCard.classList.remove('hidden');
             activeTitle.innerText = audio.title;
             activeIndex.innerText = audios.indexOf(audio) + 1;
-            activeExtLink.href = audio.url;
+            activeExtLink.href = playableUrl;
+            document.getElementById('listening-status').innerText = 'آماده پخش';
             
             audioElement.setAttribute('data-active-id', audio.id);
-            audioElement.src = audio.url;
-            audioElement.play().catch(err => {
-                showToast("پخش خودکار توسط مرورگر متوقف شد. لطفاً دکمه Play یا شنیدن مستقیم را بزنید.", "warning");
-            });
+            drivePreview.src = '';
+            drivePreview.classList.add('hidden');
 
-            // Pre-emptively register as clicked/read
-            markTrackAsListened(audio.id);
+            if (isGoogleDriveAudio(playableUrl)) {
+                audioElement.pause();
+                audioElement.removeAttribute('src');
+                audioElement.load();
+                audioElement.classList.add('hidden');
+                drivePreview.src = buildGoogleDrivePreviewUrl(playableUrl);
+                drivePreview.classList.remove('hidden');
+                markTrackAsListened(audio.id);
+            } else {
+                audioElement.classList.remove('hidden');
+                audioElement.src = playableUrl;
+                audioElement.load();
+                audioElement.play().catch(err => {
+                    console.debug('Autoplay blocked by browser:', err);
+                });
+            }
             
             // Scroll smoothly to active player
             playerCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -961,6 +1041,7 @@ CREATE TABLE public.responses (
             } else {
                 container.innerHTML = audios.map((audio, index) => {
                     const isListened = listenedList.includes(audio.id);
+                    const playableUrl = normalizeAudioUrl(audio.url);
                     return `
                         <div class="p-4 rounded-2xl border transition flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 ${isListened ? 'bg-emerald-50/40 border-emerald-100' : 'bg-white border-slate-100 hover:border-rose-100'}">
                             <div class="flex items-start gap-3">
@@ -977,7 +1058,7 @@ CREATE TABLE public.responses (
                             </div>
                             
                             <div class="flex items-center gap-1.5 w-full sm:w-auto justify-end">
-                                <a href="${audio.url}" target="_blank" onclick="markTrackAsListened('${audio.id}')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-[10px] font-bold transition flex items-center gap-1">
+                                <a href="${playableUrl}" target="_blank" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-[10px] font-bold transition flex items-center gap-1">
                                     <i class="fas fa-external-link-alt"></i>
                                     <span>لینک کمکی</span>
                                 </a>
@@ -1074,7 +1155,7 @@ CREATE TABLE public.responses (
         }
 
         // Submitting responses to research DB
-        function handleSurveySubmit(event) {
+        async function handleSurveySubmit(event) {
             event.preventDefault();
             if (!currentUser) return;
 
@@ -1095,6 +1176,7 @@ CREATE TABLE public.responses (
 
             const newResponse = {
                 id: 'resp_' + Date.now(),
+                user_id: currentUser.id,
                 user_phone: userPhone,
                 user_name: currentUser.name,
                 answers: answers,
@@ -1102,8 +1184,14 @@ CREATE TABLE public.responses (
                 created_at: new Date().toISOString()
             };
 
-            responses.push(newResponse);
-            localStorage.setItem(STORAGE_KEYS.RESPONSES, JSON.stringify(responses));
+            try {
+                await apiRequest('submitResponse', newResponse);
+                responses.push(newResponse);
+            } catch (error) {
+                console.error(error);
+                showToast(`ثبت پاسخ در گوگل شیت ناموفق بود: ${error.message}`, "error");
+                return;
+            }
 
             showToast("پاسخنامه شما با موفقیت ثبت شد. صمیمانه سپاسگزاریم!", "success");
             renderActiveState();
@@ -1114,7 +1202,7 @@ CREATE TABLE public.responses (
 
         function switchAdminTab(tabId) {
             activeAdminTab = tabId;
-            const tabs = ['users', 'audios', 'questions', 'results', 'supabase'];
+            const tabs = ['users', 'audios', 'questions', 'results'];
             
             tabs.forEach(t => {
                 const element = document.getElementById(`admin-tab-${t}`);
@@ -1322,33 +1410,36 @@ CREATE TABLE public.responses (
         }
 
         // Manage user additions & edits
-        function saveUser(event) {
+        async function saveUser(event) {
             event.preventDefault();
             const id = document.getElementById('edit-user-id').value;
             const name = document.getElementById('user-input-name').value.trim();
             const phone = document.getElementById('user-input-phone').value.trim();
             const password = document.getElementById('user-input-password').value.trim();
 
-            if (id) {
-                // Update
-                const index = users.findIndex(u => u.id === id);
-                if (index !== -1) {
-                    users[index] = { ...users[index], name, phone, password };
-                    showToast("اطلاعات مادر پژوهش با موفقیت ویرایش شد.", "success");
-                }
+            if (users.some(u => u.phone === phone && u.id !== id)) {
+                showToast("کاربری با این شماره تلفن از قبل در سیستم موجود است.", "error");
+                return;
+            }
+
+            let savedUser = { id: id || 'u_' + Date.now(), name, phone, password };
+            try {
+                savedUser = await apiRequest('saveUser', savedUser);
+            } catch (error) {
+                console.error(error);
+                showToast(`ذخیره کاربر در گوگل شیت ناموفق بود: ${error.message}`, "error");
+                return;
+            }
+
+            const index = users.findIndex(u => u.id === savedUser.id);
+            if (index !== -1) {
+                users[index] = savedUser;
+                showToast("اطلاعات مادر پژوهش با موفقیت ویرایش شد.", "success");
             } else {
-                // Check unique
-                if (users.some(u => u.phone === phone)) {
-                    showToast("کاربری با این شماره تلفن از قبل در سیستم موجود است.", "error");
-                    return;
-                }
-                // Insert
-                const newUser = { id: 'u_' + Date.now(), name, phone, password };
-                users.push(newUser);
+                users.push(savedUser);
                 showToast("کاربر جدید ثبت شد و دسترسی فعال گردید.", "success");
             }
 
-            localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
             document.getElementById('admin-user-form').reset();
             document.getElementById('edit-user-id').value = '';
             renderAdminData();
@@ -1364,36 +1455,50 @@ CREATE TABLE public.responses (
             showToast("اطلاعات کاربر به فرم انتقال یافت. پس از تغییرات دکمه ثبت را مجدد بزنید.", "info");
         }
 
-        function deleteUser(id) {
+        async function deleteUser(id) {
             if (confirm("آیا از حذف این کاربر مطمئن هستید؟ دسترسی او قطع خواهد شد.")) {
+                try {
+                    await apiRequest('deleteUser', { id });
+                } catch (error) {
+                    console.error(error);
+                    showToast(`حذف کاربر از گوگل شیت ناموفق بود: ${error.message}`, "error");
+                    return;
+                }
                 users = users.filter(u => u.id !== id);
-                localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
                 showToast("کاربر با موفقیت حذف گردید.", "success");
                 renderAdminData();
             }
         }
 
         // Manage audio additions & edits
-        function saveAudio(event) {
+        async function saveAudio(event) {
             event.preventDefault();
             const id = document.getElementById('edit-audio-id').value;
             const title = document.getElementById('audio-input-title').value.trim();
             const description = document.getElementById('audio-input-desc').value.trim();
             const url = document.getElementById('audio-input-url').value.trim();
+            const sortOrder = id ? (audios.find(a => a.id === id)?.sort_order || audios.findIndex(a => a.id === id) + 1) : audios.length + 1;
+            let savedAudio = { id: id || 'a_' + Date.now(), title, description, url, sort_order: sortOrder };
+
+            try {
+                savedAudio = await apiRequest('saveAudio', savedAudio);
+            } catch (error) {
+                console.error(error);
+                showToast(`ذخیره فایل صوتی در گوگل شیت ناموفق بود: ${error.message}`, "error");
+                return;
+            }
 
             if (id) {
                 const index = audios.findIndex(a => a.id === id);
                 if (index !== -1) {
-                    audios[index] = { ...audios[index], title, description, url };
+                    audios[index] = normalizeAudioList([savedAudio])[0];
                     showToast("فایل صوتی با موفقیت ویرایش شد.", "success");
                 }
             } else {
-                const newAudio = { id: 'a_' + Date.now(), title, description, url };
-                audios.push(newAudio);
+                audios.push(normalizeAudioList([savedAudio])[0]);
                 showToast("پادکست جدید به آرشیو پژوهش افزوده شد.", "success");
             }
 
-            localStorage.setItem(STORAGE_KEYS.AUDIOS, JSON.stringify(audios));
             document.getElementById('admin-audio-form').reset();
             document.getElementById('edit-audio-id').value = '';
             renderAdminData();
@@ -1409,17 +1514,23 @@ CREATE TABLE public.responses (
             showToast("اطلاعات پادکست به فرم انتقال یافت.", "info");
         }
 
-        function deleteAudio(id) {
+        async function deleteAudio(id) {
             if (confirm("آیا از حذف این پادکست پژوهشی مطمئن هستید؟")) {
+                try {
+                    await apiRequest('deleteAudio', { id });
+                } catch (error) {
+                    console.error(error);
+                    showToast(`حذف فایل صوتی از گوگل شیت ناموفق بود: ${error.message}`, "error");
+                    return;
+                }
                 audios = audios.filter(a => a.id !== id);
-                localStorage.setItem(STORAGE_KEYS.AUDIOS, JSON.stringify(audios));
                 showToast("پادکست حذف گردید.", "success");
                 renderAdminData();
             }
         }
 
         // Manage questionnaire questions additions & edits
-        function saveQuestion(event) {
+        async function saveQuestion(event) {
             event.preventDefault();
             const id = document.getElementById('edit-question-id').value;
             const title = document.getElementById('question-input-title').value.trim();
@@ -1428,22 +1539,30 @@ CREATE TABLE public.responses (
             
             let options = null;
             if (type === 'choice' && rawOptions) {
-                options = rawOptions.split(',').map(o => o.trim()).filter(Boolean);
+                options = rawOptions.split(/[,،]/).map(o => o.trim()).filter(Boolean);
+            }
+            const sortOrder = id ? (questions.find(q => q.id === id)?.sort_order || questions.findIndex(q => q.id === id) + 1) : questions.length + 1;
+            let savedQuestion = { id: id || 'q_' + Date.now(), title, type, options, sort_order: sortOrder };
+
+            try {
+                savedQuestion = await apiRequest('saveQuestion', savedQuestion);
+            } catch (error) {
+                console.error(error);
+                showToast(`ذخیره سوال در گوگل شیت ناموفق بود: ${error.message}`, "error");
+                return;
             }
 
             if (id) {
                 const index = questions.findIndex(q => q.id === id);
                 if (index !== -1) {
-                    questions[index] = { ...questions[index], title, type, options };
+                    questions[index] = savedQuestion;
                     showToast("سوال پژوهش ویرایش شد.", "success");
                 }
             } else {
-                const newQuestion = { id: 'q_' + Date.now(), title, type, options };
-                questions.push(newQuestion);
+                questions.push(savedQuestion);
                 showToast("سوال جدید به لیست پرسشنامه نهایی اضافه شد.", "success");
             }
 
-            localStorage.setItem(STORAGE_KEYS.QUESTIONS, JSON.stringify(questions));
             document.getElementById('admin-question-form').reset();
             document.getElementById('edit-question-id').value = '';
             document.getElementById('question-options-container').classList.add('hidden');
@@ -1466,10 +1585,16 @@ CREATE TABLE public.responses (
             showToast("اطلاعات سوال بارگذاری شد.", "info");
         }
 
-        function deleteQuestion(id) {
+        async function deleteQuestion(id) {
             if (confirm("آیا از حذف این سوال پرسشنامه مطمئن هستید؟")) {
+                try {
+                    await apiRequest('deleteQuestion', { id });
+                } catch (error) {
+                    console.error(error);
+                    showToast(`حذف سوال از گوگل شیت ناموفق بود: ${error.message}`, "error");
+                    return;
+                }
                 questions = questions.filter(q => q.id !== id);
-                localStorage.setItem(STORAGE_KEYS.QUESTIONS, JSON.stringify(questions));
                 showToast("سوال حذف گردید.", "success");
                 renderAdminData();
             }
@@ -1535,7 +1660,7 @@ CREATE TABLE public.responses (
             
             try {
                 document.execCommand('copy');
-                showToast("کد با موفقیت در حافظه موقت (Clipboard) کپی شد. اکنون می‌توانید آن را در Supabase پیست کنید.", "success");
+                showToast("کد با موفقیت در حافظه موقت (Clipboard) کپی شد.", "success");
             } catch (err) {
                 showToast("کپی متاسفانه ناموفق بود.", "error");
             }
