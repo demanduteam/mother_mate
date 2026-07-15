@@ -62,14 +62,14 @@
 
     <!-- Header/Navigation Bar -->
     <header class="bg-white/80 backdrop-blur-md shadow-sm border-b border-rose-100 sticky top-0 z-40 transition-all">
-        <div class="max-w-7xl mx-auto px-4 py-3 sm:px-6 lg:px-8 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-rose-500 rounded-xl flex items-center justify-center text-white shadow-md shadow-rose-200">
-                    <i class="fas fa-baby-carriage text-xl"></i>
+        <div class="max-w-7xl mx-auto px-3 py-2 sm:px-6 sm:py-3 lg:px-8 flex justify-between items-center">
+            <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 bg-rose-500 rounded-xl flex items-center justify-center text-white shadow-md shadow-rose-200 shrink-0">
+                    <i class="fas fa-baby-carriage text-base sm:text-xl"></i>
                 </div>
-                <div>
-                    <h1 class="text-base sm:text-lg font-extrabold text-slate-800">مطالعه تاثیر تجارب شنیداری زایمان</h1>
-                    <p class="text-xs text-rose-500 font-medium">پژوهش علمی روانشناسی و مامایی مامان‌ها</p>
+                <div class="min-w-0">
+                    <h1 class="text-sm sm:text-lg font-extrabold text-slate-800 leading-tight">تجارب شنیداری زایمان</h1>
+                    <p class="hidden sm:block text-xs text-rose-500 font-medium">پژوهش علمی روانشناسی و مامایی مامان‌ها</p>
                 </div>
             </div>
             
@@ -84,7 +84,7 @@
                     <i class="fas fa-sign-out-alt"></i>
                 </button>
                 
-                <button id="admin-mode-btn" onclick="toggleAdminPanel()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                <button id="admin-mode-btn" onclick="toggleAdminPanel()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-2 sm:px-3 py-2 rounded-xl text-[10px] sm:text-xs font-bold transition flex items-center gap-1.5">
                     <i class="fas fa-user-shield"></i>
                     <span id="admin-btn-text">پنل مدیریت</span>
                 </button>
@@ -93,7 +93,7 @@
     </header>
 
     <!-- Main content area -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 sm:px-6 lg:px-8">
+    <main class="flex-grow max-w-7xl w-full mx-auto px-3 py-3 sm:px-6 sm:py-6 lg:px-8">
         
         <!-- ================= LOGIN SCREEN ================= -->
         <div id="section-login" class="max-w-md mx-auto my-12 bg-white rounded-3xl shadow-xl border border-rose-100/50 p-8 transition-all duration-300">
@@ -102,17 +102,17 @@
                     <i class="fas fa-heartbeat text-4xl animate-pulse"></i>
                 </div>
                 <h2 class="text-2xl font-bold text-slate-800">ورود به سامانه پژوهش زایمان</h2>
-                <p class="text-sm text-slate-500 mt-2 leading-relaxed">مامان باردار گرامی؛ جهت ورود لطفاً شماره همراه و کلمه‌ی عبوری که برای شما تعریف شده است را وارد نمایید.</p>
+                <p class="text-sm text-slate-500 mt-2 leading-relaxed">مامان باردار گرامی؛ نام کاربری و رمز عبور خود را وارد کنید. اعداد فارسی و انگلیسی هر دو پذیرفته می‌شوند.</p>
             </div>
 
             <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-2">شماره تلفن همراه</label>
+                    <label class="block text-xs font-bold text-slate-600 mb-2">نام کاربری</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">
-                            <i class="fas fa-mobile-alt"></i>
+                            <i class="fas fa-user"></i>
                         </span>
-                        <input type="text" id="login-phone" placeholder="مثال: 09123456789" class="w-full pr-10 pl-3 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-center font-bold tracking-widest text-slate-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white transition" required>
+                        <input type="text" id="login-phone" inputmode="numeric" placeholder="مثال: ۰۹۱۲۳۴۵۶۷۸۹" class="w-full pr-10 pl-3 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-center font-bold tracking-widest text-slate-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white transition" required>
                     </div>
                 </div>
 
@@ -122,7 +122,7 @@
                         <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">
                             <i class="fas fa-lock"></i>
                         </span>
-                        <input type="password" id="login-password" placeholder="••••" class="w-full pr-10 pl-3 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-center font-bold tracking-widest text-slate-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white transition" required>
+                        <input type="password" id="login-password" inputmode="numeric" placeholder="رمز عبور" class="w-full pr-10 pl-3 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-center font-bold tracking-widest text-slate-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white transition" required>
                     </div>
                 </div>
 
@@ -138,75 +138,72 @@
         </div>
 
         <!-- ================= USER PORTAL (AUDIO & SURVEY) ================= -->
-        <div id="section-user-portal" class="hidden space-y-8 transition-all">
+        <div id="section-user-portal" class="hidden space-y-3 sm:space-y-8 transition-all pb-24 sm:pb-0">
             <!-- Warm Welcome Banner -->
-            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-md border border-rose-100/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                <div class="space-y-2">
-                    <h2 class="text-xl sm:text-2xl font-black text-slate-800">
-                        سلام <span id="portal-user-name" class="text-rose-600">...</span> عزیز، خوش آمدید 🌺
+            <div class="bg-white rounded-2xl sm:rounded-3xl p-3 sm:p-8 shadow-md border border-rose-100/50 flex justify-between items-center gap-3">
+                <div class="min-w-0">
+                    <h2 class="text-sm sm:text-2xl font-black text-slate-800 leading-tight">
+                        سلام <span id="portal-user-name" class="text-rose-600">...</span>
                     </h2>
-                    <p class="text-sm text-slate-500 leading-relaxed max-w-2xl">
-                        حضور شما در این پژوهش علمی برای ما بسیار ارزشمند است. لطفاً ابتدا پادکست‌ها و فایل‌های صوتی تجربه‌ زایمان زیر را گوش کنید (تا حد امکان با تمرکز کامل) و سپس در انتهای صفحه، پرسشنامه نظرسنجی را تکمیل کنید.
+                    <p class="hidden sm:block text-sm text-slate-500 leading-relaxed max-w-2xl mt-2">
+                        لطفاً فایل‌های صوتی تجربه زایمان را گوش کنید و سپس پرسشنامه را تکمیل کنید.
                     </p>
                 </div>
-                <div class="flex items-center gap-3 bg-amber-50 border border-amber-200 p-4 rounded-2xl w-full md:w-auto">
-                    <div class="w-10 h-10 bg-amber-500 text-white rounded-full flex items-center justify-center text-lg shadow-sm">
-                        <i class="fas fa-info-circle animate-bounce"></i>
-                    </div>
+                <div class="flex items-center gap-2 bg-amber-50 border border-amber-200 p-2 sm:p-4 rounded-2xl shrink-0">
                     <div>
-                        <div class="text-xs font-extrabold text-amber-800">پیشرفت کل پژوهش شما:</div>
-                        <div class="text-xs text-amber-700 mt-1 font-bold" id="user-progress-text">شنیده شده: ۰ فایل از ۵۰ فایل</div>
+                        <div class="text-[10px] sm:text-xs font-extrabold text-amber-800">پیشرفت شما</div>
+                        <div class="text-[10px] sm:text-xs text-amber-700 mt-0.5 sm:mt-1 font-bold" id="user-progress-text">۰ فایل از ۰ فایل</div>
                     </div>
                 </div>
             </div>
 
             <!-- Main Portal Split Layout -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-8">
                 
                 <!-- Right Side: Podcasts/Audio Player (8 Cols) -->
-                <div class="lg:col-span-7 space-y-6">
-                    <div class="bg-white rounded-3xl shadow-md border border-rose-100/50 p-6">
-                        <div class="flex justify-between items-center mb-6">
+                <div class="lg:col-span-7 space-y-3 sm:space-y-6">
+                    <div class="bg-white rounded-2xl sm:rounded-3xl shadow-md border border-rose-100/50 p-3 sm:p-6">
+                        <div class="flex justify-between items-center mb-3 sm:mb-6">
                             <div class="flex items-center gap-2">
-                                <i class="fas fa-podcast text-rose-500 text-xl animate-pulse"></i>
-                                <h3 class="text-lg font-extrabold text-slate-800">آرشیو تجربیات صوتی زایمان</h3>
+                                <i class="fas fa-podcast text-rose-500 text-base sm:text-xl animate-pulse"></i>
+                                <h3 class="text-sm sm:text-lg font-extrabold text-slate-800">فایل‌های صوتی</h3>
                             </div>
-                            <span id="audio-count-badge" class="bg-rose-100 text-rose-700 text-xs px-3 py-1 rounded-full font-bold">۰ پادکست موجود است</span>
+                            <span id="audio-count-badge" class="bg-rose-100 text-rose-700 text-[10px] sm:text-xs px-2 sm:px-3 py-1 rounded-full font-bold">۰ فایل</span>
                         </div>
 
                         <!-- Active Audio Player Card -->
-                        <div id="active-player-card" class="bg-slate-900 text-white rounded-2xl p-6 mb-6 shadow-lg shadow-slate-900/10 hidden">
-                            <div class="flex items-start justify-between gap-4">
+                        <div id="active-player-card" class="bg-slate-900 text-white rounded-2xl p-3 sm:p-6 mb-3 sm:mb-6 shadow-lg shadow-slate-900/10 hidden">
+                            <div class="flex items-center justify-between gap-3">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-12 h-12 bg-rose-500/20 text-rose-400 rounded-xl flex items-center justify-center text-xl">
+                                    <div class="hidden sm:flex w-12 h-12 bg-rose-500/20 text-rose-400 rounded-xl items-center justify-center text-xl">
                                         <i class="fas fa-volume-up animate-pulse"></i>
                                     </div>
-                                    <div>
-                                        <div class="text-slate-400 text-xs font-bold">در حال شنیدن پادکست شماره <span id="active-track-index">1</span>:</div>
-                                        <h4 id="active-track-title" class="text-base font-bold text-white mt-1">تجربه زایمان طبیعی طبیعی</h4>
+                                    <div class="min-w-0">
+                                        <div class="text-slate-400 text-[10px] sm:text-xs font-bold">فایل شماره <span id="active-track-index">1</span></div>
+                                        <h4 id="active-track-title" class="text-xs sm:text-base font-bold text-white mt-1 truncate">تجربه زایمان طبیعی طبیعی</h4>
                                     </div>
                                 </div>
                                 <span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-1 rounded border border-emerald-500/20 font-bold" id="listening-status">درحال پخش</span>
                             </div>
                             
                             <!-- Native Custom Audio Player -->
-                            <div class="mt-6 space-y-3">
+                            <div class="mt-3 sm:mt-6 space-y-2 sm:space-y-3">
                                 <audio id="main-audio-element" class="w-full" controls preload="metadata"></audio>
-                                <iframe id="drive-audio-preview" class="hidden w-full h-36 sm:h-40 rounded-xl bg-white" allow="autoplay" loading="lazy"></iframe>
-                                <div class="flex flex-col sm:flex-row justify-between items-center gap-2 pt-2 border-t border-white/10">
-                                    <p class="text-xs text-slate-400 text-center sm:text-right">
+                                <iframe id="drive-audio-preview" class="hidden w-full h-24 sm:h-40 rounded-xl bg-white" allow="autoplay" loading="lazy"></iframe>
+                                <div class="flex flex-row justify-between items-center gap-2 pt-2 border-t border-white/10">
+                                    <p class="hidden sm:block text-xs text-slate-400 text-right">
                                         اگر پخش داخل صفحه کار نکرد، از دکمه زیر برای شنیدن مستقیم فایل استفاده کنید.
                                     </p>
                                     <a id="active-track-external-link" target="_blank" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
                                         <i class="fas fa-external-link-alt"></i>
-                                        <span>دانلود / شنیدن مستقیم</span>
+                                        <span>شنیدن مستقیم</span>
                                     </a>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Audio Playlists Grid/List -->
-                        <div class="max-h-[600px] overflow-y-auto space-y-3 pr-2" id="audios-list-container">
+                        <div class="space-y-2 sm:space-y-3" id="audios-list-container">
                             <!-- Dynamic Content Loaded from Database -->
                             <div class="text-center py-12 text-slate-400">
                                 <i class="fas fa-spinner fa-spin text-3xl mb-3 text-rose-300"></i>
@@ -218,12 +215,12 @@
 
                 <!-- Left Side: Questionnaire (5 Cols) -->
                 <div class="lg:col-span-5 space-y-6">
-                    <div class="bg-white rounded-3xl shadow-md border border-rose-100/50 p-6 sticky top-24">
-                        <div class="flex items-center gap-2 mb-4">
-                            <i class="fas fa-file-signature text-rose-500 text-xl"></i>
-                            <h3 class="text-lg font-extrabold text-slate-800">پرسشنامه نهایی ارزیابی و تاثیر</h3>
+                    <div id="survey-panel" class="bg-white rounded-2xl sm:rounded-3xl shadow-md border border-rose-100/50 p-4 sm:p-6 sticky top-24">
+                        <div class="flex items-center gap-2 mb-3 sm:mb-4">
+                            <i class="fas fa-file-signature text-rose-500 text-base sm:text-xl"></i>
+                            <h3 class="text-sm sm:text-lg font-extrabold text-slate-800">پرسشنامه</h3>
                         </div>
-                        <p class="text-xs text-slate-500 mb-6 leading-relaxed">
+                        <p class="hidden sm:block text-xs text-slate-500 mb-6 leading-relaxed">
                             لطفاً پس از اتمام گوش دادن به پادکست‌ها، پرسش‌های زیر را با دقت پاسخ دهید. این پاسخ‌ها کاملاً محرمانه مانده و صرفاً برای تحلیل علمی پژوهش استفاده خواهد شد.
                         </p>
 
@@ -539,13 +536,18 @@
 
     </main>
 
+    <button id="floating-survey-btn" onclick="handleFloatingSurveyAction()" class="hidden fixed bottom-4 left-3 right-3 z-40 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold rounded-2xl shadow-2xl shadow-emerald-900/20 py-3 px-4 text-sm items-center justify-center gap-2 sm:hidden">
+        <i class="fas fa-file-signature"></i>
+        <span id="floating-survey-text">تکمیل پرسشنامه</span>
+    </button>
+
     <!-- Soft Maternal Footer -->
-    <footer class="bg-white/50 border-t border-rose-100 py-6 mt-12">
+    <footer class="bg-white/50 border-t border-rose-100 py-3 sm:py-6 mt-4 sm:mt-12">
         <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
-            <p class="text-xs font-bold text-slate-600">
+            <p class="text-[10px] sm:text-xs font-bold text-slate-600">
                 © سامانه یکپارچه نظرسنجی و پژوهش روانشناسی زایمان ۱۴۰۵ | طراحی شده جهت تسهیل پژوهش‌های مامایی
             </p>
-            <p class="text-[10px] text-slate-400">
+            <p class="hidden sm:block text-[10px] text-slate-400">
                 تمام حقوق مادی و معنوی پاسخ‌ها و محتوای صوتی پادکست‌ها متعلق به تیم علمی این پروژه تحقیقاتی می‌باشد.
             </p>
         </div>
@@ -565,7 +567,7 @@
 
         const API_CONFIG = {
             BASE_URL: 'https://script.google.com/macros/s/AKfycbzZIQTpjaPoarf-uX3ZzA5Hm0-LrIBXekB1Okv1Z4aMlwv-E7P6xWJ3TsuqY6y_sUPC9Q/exec',
-            REQUIRED_BACKEND_VERSION: '2026-07-15-sheets-crud-v4'
+            REQUIRED_BACKEND_VERSION: '2026-07-15-sheets-crud-v5'
         };
 
         const LOCAL_AUDIO_FALLBACKS = [
@@ -602,6 +604,22 @@
             return '';
         }
 
+        function normalizePersianDigits(value) {
+            const persian = '۰۱۲۳۴۵۶۷۸۹';
+            const arabic = '٠١٢٣٤٥٦٧٨٩';
+            return String(value || '').replace(/[۰-۹٠-٩]/g, char => {
+                const persianIndex = persian.indexOf(char);
+                if (persianIndex > -1) return String(persianIndex);
+                return String(arabic.indexOf(char));
+            });
+        }
+
+        function normalizeLoginIdentifier(value) {
+            const normalized = normalizePersianDigits(value).replace(/\D/g, '');
+            if (normalized.length === 10 && normalized.charAt(0) === '9') return '0' + normalized;
+            return normalized;
+        }
+
         function normalizeAudioList(items) {
             return (items || []).map((audio, index) => {
                 const url = firstValue(audio, ['url', 'URL', 'audio_url', 'file_url', 'link', 'drive_url', 'لینک', 'آدرس', 'فایل']);
@@ -622,13 +640,68 @@
         let responses = [];
         let currentUser = null;
         let listenedTracks = {}; // Format: { userPhone: [audioId1, audioId2] }
+        let backExitPending = false;
+        let backExitTimer = null;
+        let allowBrowserBackExit = false;
 
         // Bootstrapping function
         window.onload = async function() {
+            setupDigitNormalizer('login-phone', normalizeLoginIdentifier);
+            setupDigitNormalizer('login-password', normalizePersianDigits);
+            setupDigitNormalizer('user-input-phone', normalizeLoginIdentifier);
+            setupDigitNormalizer('user-input-password', normalizePersianDigits);
+            setupBackButtonProtection();
             setupAudioEventListeners();
             await initAppData();
             renderActiveState();
         };
+
+        function setupDigitNormalizer(elementId, normalizer) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+            element.addEventListener('input', () => {
+                const normalized = normalizer(element.value);
+                if (element.value !== normalized) element.value = normalized;
+            });
+        }
+
+        function setupBackButtonProtection() {
+            if (!window.history || !history.pushState) return;
+
+            history.replaceState({ maternalStudyPage: true }, document.title, location.href);
+            history.pushState({ maternalStudyGuard: true }, document.title, location.href);
+            window.addEventListener('popstate', handleProtectedBackNavigation);
+        }
+
+        function handleProtectedBackNavigation() {
+            if (allowBrowserBackExit) return;
+
+            const isAppVisible = !document.getElementById('section-admin').classList.contains('hidden') ||
+                !document.getElementById('section-user-portal').classList.contains('hidden') ||
+                !document.getElementById('section-login').classList.contains('hidden');
+
+            if (!isAppVisible) return;
+
+            if (backExitPending) {
+                allowBrowserBackExit = true;
+                clearBackExitWarning();
+                history.back();
+                return;
+            }
+
+            backExitPending = true;
+            showToast("برای خروج از سامانه، یک بار دیگر دکمه بازگشت را بزنید.", "warning");
+            history.pushState({ maternalStudyGuard: true }, document.title, location.href);
+            backExitTimer = window.setTimeout(clearBackExitWarning, 3500);
+        }
+
+        function clearBackExitWarning() {
+            backExitPending = false;
+            if (backExitTimer) {
+                window.clearTimeout(backExitTimer);
+                backExitTimer = null;
+            }
+        }
 
         function initializeLocalSessionData() {
             localStorage.removeItem(STORAGE_KEYS.USERS);
@@ -829,6 +902,7 @@
                 document.getElementById('section-user-portal').classList.add('hidden');
                 document.getElementById('logout-btn').classList.add('hidden');
                 document.getElementById('header-user-badge').classList.add('hidden');
+                document.getElementById('floating-survey-btn').classList.add('hidden');
                 
                 renderAdminData();
             } else {
@@ -854,6 +928,7 @@
                     document.getElementById('section-user-portal').classList.add('hidden');
                     document.getElementById('logout-btn').classList.add('hidden');
                     document.getElementById('header-user-badge').classList.add('hidden');
+                    document.getElementById('floating-survey-btn').classList.add('hidden');
                 }
             }
         }
@@ -881,8 +956,8 @@
         // Manage logins
         async function handleLogin(event) {
             event.preventDefault();
-            const phone = document.getElementById('login-phone').value.trim();
-            const password = document.getElementById('login-password').value.trim();
+            const phone = normalizeLoginIdentifier(document.getElementById('login-phone').value);
+            const password = normalizePersianDigits(document.getElementById('login-password').value).trim();
 
             if (!phone || !password) {
                 showToast("لطفاً تمامی فیلدها را پر کنید.", "warning");
@@ -905,7 +980,7 @@
                 showToast(`خوش آمدید ${matchedUser.name} عزیز`, "success");
                 renderActiveState();
             } else {
-                showToast("شماره همراه یا کلمه عبور اشتباه است یا توسط ادمین ثبت نشده است.", "error");
+                showToast("نام کاربری یا کلمه عبور اشتباه است یا توسط ادمین ثبت نشده است.", "error");
             }
         }
 
@@ -952,7 +1027,7 @@
             if (!listenedTracks[userPhone].includes(audioId)) {
                 listenedTracks[userPhone].push(audioId);
                 localStorage.setItem(STORAGE_KEYS.LISTENED_TRACKS, JSON.stringify(listenedTracks));
-                showToast("این پادکست به عنوان شنیده‌شده علامت‌گذاری شد ✔️", "success");
+                showToast("این فایل به عنوان شنیده‌شده علامت‌گذاری شد.", "success");
                 renderUserPortalContent(); // Re-render lists & check progress
             }
         }
@@ -1026,8 +1101,8 @@
             const userListenedCount = listenedList.length;
             
             // Update stats badge
-            document.getElementById('audio-count-badge').innerText = `${totalAudios} پادکست موجود است`;
-            document.getElementById('user-progress-text').innerText = `شنیده شده: ${userListenedCount} فایل از کل ${totalAudios} فایل صوتی`;
+            document.getElementById('audio-count-badge').innerText = `${totalAudios} فایل`;
+            document.getElementById('user-progress-text').innerText = `${userListenedCount} فایل از ${totalAudios} فایل`;
 
             // Display podcasts list
             const container = document.getElementById('audios-list-container');
@@ -1043,24 +1118,24 @@
                     const isListened = listenedList.includes(audio.id);
                     const playableUrl = normalizeAudioUrl(audio.url);
                     return `
-                        <div class="p-4 rounded-2xl border transition flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 ${isListened ? 'bg-emerald-50/40 border-emerald-100' : 'bg-white border-slate-100 hover:border-rose-100'}">
-                            <div class="flex items-start gap-3">
-                                <button onclick="selectAudioTrack('${audio.id}')" class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${isListened ? 'bg-emerald-500 text-white' : 'bg-rose-100 text-rose-600 hover:bg-rose-200'} transition shadow-sm">
+                        <div class="p-2.5 sm:p-4 rounded-2xl border transition flex justify-between items-center gap-2 ${isListened ? 'bg-emerald-50/40 border-emerald-100' : 'bg-white border-slate-100 hover:border-rose-100'}">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <button onclick="selectAudioTrack('${audio.id}')" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0 ${isListened ? 'bg-emerald-500 text-white' : 'bg-rose-100 text-rose-600 hover:bg-rose-200'} transition shadow-sm">
                                     <i class="fas ${isListened ? 'fa-play' : 'fa-play'} ml-[-1px]"></i>
                                 </button>
-                                <div>
-                                    <h4 class="text-xs sm:text-sm font-extrabold text-slate-800 flex items-center gap-2">
-                                        <span>${index + 1}. ${audio.title}</span>
+                                <div class="min-w-0">
+                                    <h4 class="text-[11px] sm:text-sm font-extrabold text-slate-800 flex items-center gap-1.5 min-w-0">
+                                        <span class="truncate">${index + 1}. ${audio.title}</span>
                                         ${isListened ? '<span class="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-black">شنیده شده</span>' : ''}
                                     </h4>
-                                    <p class="text-[11px] text-slate-500 mt-1">${audio.description || 'بدون توضیح کوتاه'}</p>
+                                    <p class="hidden sm:block text-[11px] text-slate-500 mt-1">${audio.description || 'بدون توضیح کوتاه'}</p>
                                 </div>
                             </div>
                             
-                            <div class="flex items-center gap-1.5 w-full sm:w-auto justify-end">
-                                <a href="${playableUrl}" target="_blank" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-[10px] font-bold transition flex items-center gap-1">
+                            <div class="flex items-center gap-1.5 shrink-0">
+                                <a href="${playableUrl}" target="_blank" class="px-2 sm:px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-[10px] font-bold transition flex items-center gap-1">
                                     <i class="fas fa-external-link-alt"></i>
-                                    <span>لینک کمکی</span>
+                                    <span class="hidden sm:inline">لینک کمکی</span>
                                 </a>
                             </div>
                         </div>
@@ -1084,23 +1159,58 @@
                 warningBox.classList.add('hidden');
                 surveyForm.classList.add('hidden');
                 successState.classList.remove('hidden');
+                updateFloatingSurveyButton('submitted', userListenedCount, threshold);
             } else {
                 successState.classList.add('hidden');
                 if (canAnswerSurvey) {
                     warningBox.classList.add('hidden');
                     surveyForm.classList.remove('hidden');
                     renderUserSurveyQuestions();
+                    updateFloatingSurveyButton('ready', userListenedCount, threshold);
                 } else {
                     warningBox.classList.remove('hidden');
                     warningBox.innerHTML = `
                         <i class="fas fa-exclamation-triangle mt-0.5 text-sm"></i>
                         <div>
-                            <p class="font-extrabold leading-relaxed">لطفاً ابتدا حداقل ${threshold} پادکست را بشنوید.</p>
-                            <p class="font-normal mt-1 leading-relaxed text-[11px]">تاکنون شما به ${userListenedCount} پادکست گوش کرده‌اید. پس از شنیدن ۳ تجربه زایمان صوتی، فرم پرسشنامه به‌طور خودکار برای شما فعال خواهد شد.</p>
+                            <p class="font-extrabold leading-relaxed">لطفاً ابتدا حداقل ${threshold} فایل را بشنوید.</p>
+                            <p class="font-normal mt-1 leading-relaxed text-[11px]">تاکنون شما به ${userListenedCount} فایل گوش کرده‌اید. پس از شنیدن ۳ فایل، فرم پرسشنامه فعال می‌شود.</p>
                         </div>
                     `;
                     surveyForm.classList.add('hidden');
+                    updateFloatingSurveyButton('locked', userListenedCount, threshold);
                 }
+            }
+        }
+
+        function updateFloatingSurveyButton(state, listenedCount, threshold) {
+            const button = document.getElementById('floating-survey-btn');
+            const text = document.getElementById('floating-survey-text');
+            button.classList.remove('hidden', 'bg-emerald-600', 'hover:bg-emerald-700', 'bg-amber-500', 'hover:bg-amber-600', 'bg-slate-700', 'hover:bg-slate-800');
+            button.classList.add('flex');
+
+            if (state === 'ready') {
+                button.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+                text.innerText = 'تکمیل پرسشنامه';
+            } else if (state === 'submitted') {
+                button.classList.add('bg-slate-700', 'hover:bg-slate-800');
+                text.innerText = 'پرسشنامه ثبت شد';
+            } else {
+                button.classList.add('bg-amber-500', 'hover:bg-amber-600');
+                text.innerText = `${listenedCount}/${threshold} فایل شنیده شده`;
+            }
+        }
+
+        function handleFloatingSurveyAction() {
+            if (!currentUser) return;
+            const userPhone = currentUser.phone;
+            const listenedCount = (listenedTracks[userPhone] || []).length;
+            const threshold = Math.min(3, audios.length);
+            const alreadySubmitted = responses.some(r => r.user_phone === userPhone);
+
+            if (alreadySubmitted || listenedCount >= threshold) {
+                document.getElementById('survey-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                showToast(`برای تکمیل پرسشنامه باید حداقل ${threshold} فایل را گوش دهید.`, "warning");
             }
         }
 
@@ -1414,8 +1524,8 @@
             event.preventDefault();
             const id = document.getElementById('edit-user-id').value;
             const name = document.getElementById('user-input-name').value.trim();
-            const phone = document.getElementById('user-input-phone').value.trim();
-            const password = document.getElementById('user-input-password').value.trim();
+            const phone = normalizeLoginIdentifier(document.getElementById('user-input-phone').value);
+            const password = normalizePersianDigits(document.getElementById('user-input-password').value).trim();
 
             if (users.some(u => u.phone === phone && u.id !== id)) {
                 showToast("کاربری با این شماره تلفن از قبل در سیستم موجود است.", "error");
